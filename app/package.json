@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.76.0",
-    "@unlink-xyz/sdk": "^0.0.2-canary.0",
+    "@unlink-xyz/sdk": "^0.3.0-canary.738",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "next": "16.2.10",
