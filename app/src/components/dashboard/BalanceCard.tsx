@@ -11,6 +11,7 @@ interface BalanceCardProps {
   onDeposit: () => void;
   onWithdraw: () => void;
   walletConnected: boolean;
+  isWrongNetwork: boolean;
 }
 
 function BalanceSkeleton() {
@@ -142,7 +143,7 @@ function BalanceValue({ balance }: { balance: string }) {
   );
 }
 
-export function BalanceCard({ balance, loading, error, onRetry, onDeposit, onWithdraw, walletConnected }: BalanceCardProps) {
+export function BalanceCard({ balance, loading, error, onRetry, onDeposit, onWithdraw, walletConnected, isWrongNetwork }: BalanceCardProps) {
   return (
     <section className="bg-paper text-ink border border-line/30 p-6 sm:p-8">
       <h2 className="font-label text-xs uppercase tracking-[0.06em] text-muted mb-3">
@@ -154,6 +155,8 @@ export function BalanceCard({ balance, loading, error, onRetry, onDeposit, onWit
           <BalanceSkeleton />
         ) : error ? (
           <BalanceError message={error} onRetry={onRetry} />
+        ) : isWrongNetwork ? (
+          <p className="font-sans text-base text-muted">Switch to Monad Testnet to view your balance.</p>
         ) : !walletConnected || balance === null ? (
           <p className="font-sans text-base text-muted">Connect your wallet to view balance.</p>
         ) : balance === "$0.00" ? (
@@ -166,14 +169,14 @@ export function BalanceCard({ balance, loading, error, onRetry, onDeposit, onWit
       <div className="flex gap-3 mt-6">
         <button
           onClick={onDeposit}
-          disabled={!walletConnected}
+          disabled={!walletConnected || isWrongNetwork}
           className="bg-redact text-paper text-sm font-label uppercase tracking-wider px-6 py-3 rounded-[4px] hover:bg-reveal disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
         >
           Deposit
         </button>
         <button
           onClick={onWithdraw}
-          disabled={!walletConnected}
+          disabled={!walletConnected || isWrongNetwork}
           className="border border-redact text-redact text-sm font-label uppercase tracking-wider px-6 py-3 rounded-[4px] hover:bg-redact hover:text-paper disabled:border-line disabled:text-muted disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
         >
           Withdraw

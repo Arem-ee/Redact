@@ -10,6 +10,7 @@ interface ActivityListProps {
   error: string | null;
   onRetry: () => void;
   walletConnected: boolean;
+  isWrongNetwork: boolean;
 }
 
 function ActivitySkeleton() {
@@ -151,7 +152,7 @@ function ActivityRow({ item }: ActivityRowProps) {
   );
 }
 
-export function ActivityList({ items, loading, error, onRetry, walletConnected }: ActivityListProps) {
+export function ActivityList({ items, loading, error, onRetry, walletConnected, isWrongNetwork }: ActivityListProps) {
   return (
     <section className="bg-paper text-ink border border-line/30 p-6 sm:p-8">
       <h2 className="font-label text-xs uppercase tracking-[0.06em] text-muted mb-4">
@@ -171,6 +172,8 @@ export function ActivityList({ items, loading, error, onRetry, walletConnected }
               Retry
             </button>
           </div>
+        ) : isWrongNetwork ? (
+          <p className="font-sans text-sm text-muted">Switch to Monad Testnet to view activity.</p>
         ) : !walletConnected ? (
           <p className="font-sans text-sm text-muted">Connect your wallet to view activity.</p>
         ) : !items || items.length === 0 ? (

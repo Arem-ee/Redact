@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { UnsealRedactionBar } from "./UnsealRedactionBar";
 import { RedactionBar } from "./RedactionBar";
@@ -12,6 +13,7 @@ import { BrandWordmark } from "./BrandWordmark";
 import { useInView } from "./useInView";
 
 export default function LandingPage() {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [heroUnsealed, setHeroUnsealed] = useState(false);
 
@@ -71,7 +73,7 @@ export default function LandingPage() {
 
           <button
             id="header-cta-btn"
-            onClick={() => scrollToSection("shielding-section")}
+            onClick={() => router.push("/dashboard")}
             className="bg-redact text-paper text-xs font-label uppercase tracking-widest px-4 py-2 rounded-[4px] hover:bg-reveal focus:outline-2 focus:outline-paper-text focus:outline-offset-2 transition-colors duration-150 cursor-pointer"
           >
             Hide your balance
@@ -122,7 +124,7 @@ export default function LandingPage() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                 <button
                   id="hero-primary-cta"
-                  onClick={() => scrollToSection("shielding-section")}
+                  onClick={() => router.push("/dashboard")}
                   className="bg-redact text-paper text-sm font-label uppercase tracking-wider py-4 px-8 rounded-[4px] hover:bg-reveal focus:outline-2 focus:outline-ink focus:outline-offset-2 transition-colors duration-150 text-center cursor-pointer"
                 >
                   Hide your balance
