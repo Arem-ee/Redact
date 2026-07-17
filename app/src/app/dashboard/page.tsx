@@ -1,9 +1,9 @@
 "use client";
 
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { UserRejectedRequestError } from "viem";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { BalanceCard } from "@/components/dashboard/BalanceCard";
 import { ActivityList } from "@/components/dashboard/ActivityList";
@@ -12,12 +12,14 @@ import { WithdrawModal } from "@/components/dashboard/WithdrawModal";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 import { WrongNetworkBanner } from "@/components/dashboard/WrongNetworkBanner";
 import { useNetworkGuard } from "@/lib/useNetworkGuard";
+import { getUnlinkClient, clearUnlinkClient, fetchPrivateBalance } from "@/lib/unlink";
 import type { ModalType, ActivityItem } from "@/components/dashboard/types";
 
 export default function DashboardPage() {
   const { address, isConnected } = useAccount();
   const { connect, error: connectError, isPending: isConnecting } = useConnect();
   const { disconnect } = useDisconnect();
+  const { signMessageAsync } = useSignMessage();
   const { isWrongNetwork, switchToMonad, switchError, isSwitching } = useNetworkGuard();
   const [activeModal, setActiveModal] = useState<ModalType>(null);
 
@@ -35,17 +37,21 @@ export default function DashboardPage() {
     connect({ connector: injected() });
   };
 
-  const fetchBalance = async () => {
+  const fetchBalance = useCallback(async () => {
     setBalanceLoading(true);
     setBalanceError(null);
     try {
-      setBalance(null);
+      const client = await getUnlinkClient(
+        (msg: string) => signMessageAsync({ message: msg }),
+      );
+      const raw = await fetchPrivateBalance(client);
+      setBalance(raw);
     } catch (err) {
       setBalanceError(err instanceof Error ? err.message : "Failed to fetch balance");
     } finally {
       setBalanceLoading(false);
     }
-  };
+  }, [signMessageAsync]);
 
   const fetchActivities = async () => {
     setActivitiesLoading(true);

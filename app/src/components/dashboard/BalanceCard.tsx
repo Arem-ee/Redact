@@ -157,9 +157,9 @@ export function BalanceCard({ balance, loading, error, onRetry, onDeposit, onWit
           <BalanceError message={error} onRetry={onRetry} />
         ) : isWrongNetwork ? (
           <p className="font-sans text-base text-muted">Switch to Monad Testnet to view your balance.</p>
-        ) : !walletConnected || balance === null ? (
+        ) : !walletConnected ? (
           <p className="font-sans text-base text-muted">Connect your wallet to view balance.</p>
-        ) : balance === "$0.00" ? (
+        ) : balance === null ? (
           <p className="font-sans text-base text-muted">No funds yet. Deposit to get started.</p>
         ) : (
           <BalanceValue balance={balance} />
