@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useSignMessage, useWalletClient } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { UserRejectedRequestError } from "viem";
 import { useState, useCallback } from "react";
@@ -14,12 +14,14 @@ import { WrongNetworkBanner } from "@/components/dashboard/WrongNetworkBanner";
 import { useNetworkGuard } from "@/lib/useNetworkGuard";
 import { getUnlinkClient, clearUnlinkClient, fetchPrivateBalance } from "@/lib/unlink";
 import type { ModalType, ActivityItem } from "@/components/dashboard/types";
+import type { WalletClient } from "viem";
 
 export default function DashboardPage() {
   const { address, isConnected } = useAccount();
   const { connect, error: connectError, isPending: isConnecting } = useConnect();
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
+  const { data: walletClient } = useWalletClient();
   const { isWrongNetwork, switchToMonad, switchError, isSwitching } = useNetworkGuard();
   const [activeModal, setActiveModal] = useState<ModalType>(null);
 
@@ -43,6 +45,7 @@ export default function DashboardPage() {
     try {
       const client = await getUnlinkClient(
         (msg: string) => signMessageAsync({ message: msg }),
+        walletClient ?? undefined,
       );
       const raw = await fetchPrivateBalance(client);
       setBalance(raw);
@@ -51,7 +54,7 @@ export default function DashboardPage() {
     } finally {
       setBalanceLoading(false);
     }
-  }, [signMessageAsync]);
+  }, [signMessageAsync, walletClient]);
 
   const fetchActivities = async () => {
     setActivitiesLoading(true);
@@ -140,7 +143,14 @@ export default function DashboardPage() {
         />
       </main>
 
-      <DepositModal open={activeModal === "deposit"} onClose={() => setActiveModal(null)} />
+      <DepositModal
+        open={activeModal === "deposit"}
+        onClose={() => setActiveModal(null)}
+        onDepositComplete={fetchBalance}
+        signMessageAsync={(msg: string) => signMessageAsync({ message: msg })}
+        walletClient={walletClient ?? undefined}
+        isWrongNetwork={isWrongNetwork}
+      />
       <WithdrawModal open={activeModal === "withdraw"} onClose={() => setActiveModal(null)} />
       <SettingsPanel open={activeModal === "settings"} onClose={() => setActiveModal(null)} />
     </div>

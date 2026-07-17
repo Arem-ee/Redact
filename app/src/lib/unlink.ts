@@ -1,8 +1,9 @@
 "use client";
 
 import { createUnlinkClient } from "@unlink-xyz/sdk/client";
-import type { UnlinkClient } from "@unlink-xyz/sdk/client";
+import type { UnlinkClient, EvmProvider } from "@unlink-xyz/sdk/client";
 import { account, buildDeriveSeedMessage } from "@unlink-xyz/sdk/crypto";
+import type { WalletClient } from "viem";
 
 const APP_ID = "redact";
 const CHAIN_ID = 10143;
@@ -11,6 +12,7 @@ let _client: UnlinkClient | null = null;
 
 export async function getUnlinkClient(
   signMessageAsync: (message: string) => Promise<`0x${string}`>,
+  walletClient?: WalletClient,
 ): Promise<UnlinkClient> {
   if (_client) return _client;
   const message = buildDeriveSeedMessage({ appId: APP_ID, chainId: CHAIN_ID });
@@ -20,9 +22,19 @@ export async function getUnlinkClient(
     appId: APP_ID,
     chainId: CHAIN_ID,
   });
+  const evm: EvmProvider | undefined =
+    walletClient && walletClient.account
+      ? {
+          getAddress: async () =>
+            (walletClient.account as { address: string }).address,
+          signTypedData: (typedData) =>
+            walletClient.signTypedData(typedData as any),
+        }
+      : undefined;
   _client = createUnlinkClient({
     environment: "monad-testnet",
     account: unlinkAccount,
+    evm,
     registerUrl: "/api/unlink/register",
     authorizationToken: { url: "/api/unlink/authorization-token" },
   });
