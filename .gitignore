@@ -1,0 +1,19 @@
+# Local-only / redundant
+redact.zip
+
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+contracts/cache/
+contracts/out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
