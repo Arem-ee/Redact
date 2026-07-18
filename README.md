@@ -14,7 +14,7 @@ Deposit into a private balance that no one else can see. Check that balance priv
 
 ### How it works, briefly and honestly
 
-Non-custodial. Your keys stay in your browser, always. Redact never holds them. The chain is Monad Testnet (chain ID 10143). The privacy underneath is Unlink, deployed at [`0x56a6ecda04b8bfd38c6d1d4d38f2b1867c29a4a7`](https://testnet.monadexplorer.com/address/0x56a6ecda04b8bfd38c6d1d4d38f2b1867c29a4a7) on Monad Testnet.
+Non-custodial. Your keys stay in your browser, always. Redact never holds them. The chain is Monad Testnet (chain ID 10143). The privacy underneath is Unlink, a privacy layer deployed as a smart contract on Monad.
 
 ### Setup
 
