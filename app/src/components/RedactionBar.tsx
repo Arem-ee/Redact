@@ -81,7 +81,7 @@ export function RedactionBar({ children }: RedactionBarProps) {
         >
           <span className="absolute inset-0 overflow-hidden block">
             <span
-              className={`absolute inset-0 bg-redact transition-opacity duration-300 ${
+              className={`absolute inset-0 bg-redact/95 backdrop-blur-md transition-opacity duration-300 ${
                 isRevealed ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
               style={{ clipPath: "polygon(0% 1.5%, 26% 0%, 51% 2.5%, 74% 0.5%, 100% 2%, 99% 98%, 76% 99.5%, 48% 97.5%, 24% 99%, 0% 98.5%)" }}
@@ -101,7 +101,7 @@ export function RedactionBar({ children }: RedactionBarProps) {
         >
           <span className="absolute inset-0 overflow-hidden block">
             <motion.span
-              className="absolute inset-0 bg-redact"
+              className="absolute inset-0 bg-redact/95 backdrop-blur-md"
               initial={{ x: "0%" }}
               animate={{ x: isRevealed ? "101%" : "0%" }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}

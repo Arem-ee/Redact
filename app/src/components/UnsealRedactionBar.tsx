@@ -28,10 +28,10 @@ export function UnsealRedactionBar({
           <AnimatePresence>
             {!unsealed && (
               prefersReducedMotion ? (
-                <span className="absolute inset-0 bg-redact transition-opacity duration-500" />
+                <span className="absolute inset-0 bg-redact/95 backdrop-blur-md transition-opacity duration-500" />
               ) : (
                 <motion.span
-                  className="absolute inset-0 bg-redact"
+                  className="absolute inset-0 bg-redact/95 backdrop-blur-md"
                   initial={{ scaleX: 1 }}
                   exit={{ scaleX: 0 }}
                   transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
@@ -56,10 +56,10 @@ export function UnsealRedactionBar({
           <AnimatePresence>
             {!unsealed && (
               prefersReducedMotion ? (
-                <span className="absolute inset-0 bg-redact transition-opacity duration-500" />
+                <span className="absolute inset-0 bg-redact/95 backdrop-blur-md transition-opacity duration-500" />
               ) : (
                 <motion.span
-                  className="absolute inset-0 bg-redact"
+                  className="absolute inset-0 bg-redact/95 backdrop-blur-md"
                   initial={{ scaleX: 1 }}
                   exit={{ scaleX: 0 }}
                   transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}

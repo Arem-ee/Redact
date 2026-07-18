@@ -76,7 +76,7 @@ export function InteractiveBlockExplorer() {
             </div>
             <div className="flex justify-between items-center py-1">
               <span className="font-sans text-sm text-ink">Monad (MON)</span>
-              <div className="relative inline-block h-5 w-28 overflow-hidden bg-redact" style={{ clipPath: "polygon(0.5% 2.5%, 25.5% 0%, 50% 1.5%, 75% 0%, 99.5% 1.5%, 99% 97%, 74.5% 99.5%, 49% 98%, 24.5% 99%, 0.5% 98%)" }}>
+              <div className="relative inline-block h-5 w-28 overflow-hidden bg-redact/95 backdrop-blur-md" style={{ clipPath: "polygon(0.5% 2.5%, 25.5% 0%, 50% 1.5%, 75% 0%, 99.5% 1.5%, 99% 97%, 74.5% 99.5%, 49% 98%, 24.5% 99%, 0.5% 98%)" }}>
                 <AnimatePresence>
                   {isRedactExplorerRevealed && (
                     <motion.div
@@ -94,7 +94,7 @@ export function InteractiveBlockExplorer() {
             </div>
             <div className="flex justify-between items-center py-1">
               <span className="font-sans text-sm text-ink">USD Coin (USDC)</span>
-              <div className="relative inline-block h-5 w-32 overflow-hidden bg-redact" style={{ clipPath: "polygon(0% 1%, 26% 2.5%, 49% 0%, 74% 2%, 100% 0.5%, 98.5% 99%, 74% 97.5%, 52% 99%, 23% 98%, 0% 100%)" }}>
+              <div className="relative inline-block h-5 w-32 overflow-hidden bg-redact/95 backdrop-blur-md" style={{ clipPath: "polygon(0% 1%, 26% 2.5%, 49% 0%, 74% 2%, 100% 0.5%, 98.5% 99%, 74% 97.5%, 52% 99%, 23% 98%, 0% 100%)" }}>
                 <AnimatePresence>
                   {isRedactExplorerRevealed && (
                     <motion.div
@@ -112,7 +112,7 @@ export function InteractiveBlockExplorer() {
             </div>
             <div className="flex justify-between items-center py-1">
               <span className="font-sans text-sm text-ink">Ethereum (ETH)</span>
-              <div className="relative inline-block h-5 w-24 overflow-hidden bg-redact" style={{ clipPath: "polygon(1.5% 0.5%, 24% 2%, 51.5% 0.5%, 73% 3%, 100% 1.5%, 99% 98.5%, 76% 97%, 48% 99.5%, 26% 98%, 1% 99%)" }}>
+              <div className="relative inline-block h-5 w-24 overflow-hidden bg-redact/95 backdrop-blur-md" style={{ clipPath: "polygon(1.5% 0.5%, 24% 2%, 51.5% 0.5%, 73% 3%, 100% 1.5%, 99% 98.5%, 76% 97%, 48% 99.5%, 26% 98%, 1% 99%)" }}>
                 <AnimatePresence>
                   {isRedactExplorerRevealed && (
                     <motion.div

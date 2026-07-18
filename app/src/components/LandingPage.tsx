@@ -4,11 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { UnsealRedactionBar } from "./UnsealRedactionBar";
-import { RedactionBar } from "./RedactionBar";
 import { InteractiveBlockExplorer } from "./InteractiveBlockExplorer";
 import { InteractiveDuressDemo } from "./InteractiveDuressDemo";
-import { InteractiveShieldingTerminal } from "./InteractiveShieldingTerminal";
-import { HeroBalancePreview } from "./HeroBalancePreview";
 import { BrandWordmark } from "./BrandWordmark";
 import { useInView } from "./useInView";
 
@@ -62,7 +59,7 @@ export default function LandingPage() {
             : "bg-transparent py-5 border-b border-transparent"
         }`}
       >
-        <div className="max-w-[1200px] mx-auto px-6 flex justify-between items-center">
+        <div className="max-w-[1320px] mx-auto px-8 flex justify-between items-center">
           <button
             id="brand-wordmark"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -71,27 +68,37 @@ export default function LandingPage() {
             <BrandWordmark className="text-lg tracking-[0.15em]" iconSize="w-5 h-5" />
           </button>
 
-          <button
-            id="header-cta-btn"
-            onClick={() => router.push("/dashboard")}
-            className="bg-redact text-paper text-xs font-label uppercase tracking-widest px-4 py-2 rounded-[4px] hover:bg-reveal focus:outline-2 focus:outline-paper-text focus:outline-offset-2 transition-colors duration-150 cursor-pointer"
-          >
-            Hide your balance
-          </button>
+          <div className="flex items-center gap-6">
+            <a
+              href="https://docs.redact.zip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-label uppercase tracking-widest text-paper-text/70 hover:text-paper-text transition-colors duration-150 cursor-pointer"
+            >
+              Docs
+            </a>
+            <button
+              id="header-cta-btn"
+              onClick={() => router.push("/dashboard")}
+              className="bg-redact text-paper text-xs font-label uppercase tracking-widest px-4 py-2 rounded-[4px] hover:bg-reveal focus:outline-2 focus:outline-paper-text focus:outline-offset-2 transition-colors duration-150 cursor-pointer"
+            >
+              Launch App
+            </button>
+          </div>
         </div>
       </header>
 
       <section
         id="hero-section"
-        className="py-12 bg-room relative overflow-hidden"
+        className="py-16 bg-room relative overflow-hidden"
       >
-        <div className="max-w-[1100px] mx-auto paper-elevation-wrapper">
-          <div className="deckled-paper paper-grain bg-paper text-ink p-8 md:p-16 rounded-none border border-line/30 relative overflow-hidden">
+        <div className="max-w-[1320px] mx-auto paper-elevation-wrapper">
+          <div className="deckled-paper paper-grain bg-paper text-ink p-6 md:p-8 rounded-none border border-line/30 relative overflow-hidden">
             <div
               id="confidential-stamp"
-              className="absolute right-6 top-8 lg:top-16 opacity-15 pointer-events-none select-none hidden md:block"
+              className="absolute right-4 top-4 lg:right-8 lg:top-8 opacity-10 pointer-events-none select-none hidden md:block"
             >
-              <svg width="240" height="80" viewBox="0 0 240 80" className="text-redact">
+              <svg width="160" height="54" viewBox="0 0 160 54" className="text-redact">
                 <defs>
                   <filter id="ink-bleed">
                     <feTurbulence type="fractalNoise" baseFrequency="0.15" numOctaves="3" result="noise" />
@@ -99,29 +106,24 @@ export default function LandingPage() {
                   </filter>
                 </defs>
                 <g filter="url(#ink-bleed)" style={{ transform: "rotate(-10deg)", transformOrigin: "center" }}>
-                  <rect x="10" y="10" width="220" height="60" fill="none" stroke="currentColor" strokeWidth="3.5" rx="1" strokeDasharray="180 1 120 2 150 1" />
-                  <text x="120" y="47" textAnchor="middle" className="font-label text-xl font-black tracking-[0.25em]" fill="currentColor">
+                  <rect x="8" y="8" width="144" height="38" fill="none" stroke="currentColor" strokeWidth="3" rx="1" strokeDasharray="140 1 80 2 100 1" />
+                  <text x="80" y="33" textAnchor="middle" className="font-label text-base font-black tracking-[0.25em]" fill="currentColor">
                     CONFIDENTIAL
                   </text>
                 </g>
               </svg>
             </div>
 
-            <div className="max-w-4xl">
-              <h1 className="font-display font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-ink leading-[1.1] tracking-tight mb-8">
-                Your wallet <UnsealRedactionBar extraPrefix="shows " unsealed={heroUnsealed}>everything</UnsealRedactionBar>. Redact <UnsealRedactionBar extraPrefix="shows " unsealed={heroUnsealed}>nothing</UnsealRedactionBar> — until you decide.
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="font-display font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-5xl text-ink leading-[1.15] tracking-tight mb-10 max-w-3xl mx-auto">
+                Your wallet <UnsealRedactionBar extraPrefix="shows " unsealed={heroUnsealed}>everything</UnsealRedactionBar>. Redact <UnsealRedactionBar extraPrefix="shows " unsealed={heroUnsealed}>nothing</UnsealRedactionBar>. Until you decide.
               </h1>
 
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
-                <p className="font-sans text-base sm:text-lg md:text-xl text-muted leading-relaxed max-w-2xl">
-                  Every balance on a public blockchain is visible to anyone who looks. That&apos;s not a privacy inconvenience, it&apos;s a safety problem. Redact keeps your balance hidden by default, on Monad.
-                </p>
-                <div className="flex-shrink-0 self-center lg:self-start">
-                  <HeroBalancePreview />
-                </div>
-              </div>
+              <p className="text-base sm:text-lg md:text-xl text-muted leading-relaxed max-w-2xl mx-auto mb-8">
+                Every balance on a public blockchain is visible to anyone who looks. That&apos;s not a privacy inconvenience, it&apos;s a safety problem. Redact keeps your balance hidden by default, on Monad.
+              </p>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   id="hero-primary-cta"
                   onClick={() => router.push("/dashboard")}
@@ -145,9 +147,9 @@ export default function LandingPage() {
 
       <section
         id="problem-section"
-        className="py-12 bg-room"
+        className="py-8 bg-room"
       >
-        <div className="max-w-[1100px] mx-auto mb-8 px-6 sm:px-0">
+        <div className="max-w-[1320px] mx-auto mb-6 px-8">
           <span className="font-label text-xs uppercase tracking-[0.04em] text-paper-text/60 block mb-2">
             THE PROBLEM
           </span>
@@ -156,10 +158,10 @@ export default function LandingPage() {
           </h2>
         </div>
 
-        <div ref={problemRef} className="max-w-[1100px] mx-auto paper-elevation-wrapper">
-          <div className="deckled-paper paper-grain bg-paper text-ink p-8 md:p-12 rounded-none border border-line/30 relative overflow-hidden">
-            <p className="font-sans text-base sm:text-lg text-muted leading-relaxed max-w-3xl mb-8">
-              Wallet addresses are public. Balances are public. Transaction history is public. If your address is ever linked to your name, anyone can look up exactly how much crypto you hold. That visibility has led to real <UnsealRedactionBar extraSuffix=" and worse" unsealed={problemUnsealed}>extortion</UnsealRedactionBar>, not hypothetically, documented cases, rising every year.
+        <div ref={problemRef} className="max-w-[1320px] mx-auto paper-elevation-wrapper">
+          <div className="deckled-paper paper-grain bg-paper text-ink p-6 md:p-8 rounded-none border border-line/30 relative overflow-hidden">
+            <p className="font-sans text-base sm:text-lg text-muted leading-relaxed max-w-3xl mb-6">
+              Wallet addresses are public. Balances are public. Transaction history is public. If your address is ever linked to your name, anyone can look up exactly how much crypto you hold. That visibility has led to real extortion, not hypothetically, documented cases, rising every year.
             </p>
 
             <InteractiveBlockExplorer />
@@ -167,7 +169,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-[128px] px-6 bg-room flex items-center justify-center text-center">
+      <section className="py-20 px-8 bg-room flex items-center justify-center text-center">
         <p className="font-display text-2xl sm:text-3xl md:text-4xl text-paper-text max-w-3xl leading-relaxed tracking-tight italic select-none">
           &ldquo;The moment your address has a name, your balance has a target.&rdquo;
         </p>
@@ -175,21 +177,21 @@ export default function LandingPage() {
 
       <section
         id="how-it-works"
-        className="py-12 bg-room"
+        className="py-8 bg-room"
       >
-        <div className="max-w-[1100px] mx-auto mb-8 px-6 sm:px-0">
+        <div className="max-w-[1320px] mx-auto mb-6 px-8">
           <span className="font-label text-xs uppercase tracking-[0.04em] text-paper-text/60 block mb-2">
-            ARCHITECTURAL DESIGN
+            HOW IT WORKS
           </span>
           <h2 className="font-display font-semibold text-2xl sm:text-3xl lg:text-4xl text-paper-text tracking-tight">
             Three steps to on-chain privacy
           </h2>
         </div>
 
-        <div ref={howRef} className="max-w-[1100px] mx-auto paper-elevation-wrapper">
-          <div className="deckled-paper paper-grain bg-paper text-ink p-8 md:p-12 rounded-none border border-line/30 relative overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div id="step-card-01" className="space-y-4 bg-paper/30 p-6 border border-line">
+        <div ref={howRef} className="max-w-[1320px] mx-auto paper-elevation-wrapper">
+          <div className="deckled-paper paper-grain bg-paper text-ink p-6 md:p-8 rounded-none border border-line/30 relative">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div id="step-card-01" className="space-y-4 bg-paper p-6 border border-line">
                 <div className="flex justify-between items-start">
                   <span className="font-label text-3xl lg:text-4xl text-muted font-medium block">
                     01
@@ -201,70 +203,51 @@ export default function LandingPage() {
                 </div>
                 <h3 className="font-display font-bold text-lg text-ink">Deposit</h3>
                 <p className="font-sans text-sm text-muted leading-relaxed">
-                  Move stablecoins into your <UnsealRedactionBar extraPrefix="private " unsealed={howUnsealed}>balance</UnsealRedactionBar>. It leaves the public ledger the moment it lands.
+                  Move stablecoins into your private balance. It leaves the public ledger the moment it lands.
                 </p>
               </div>
 
-            <div id="step-card-02" className="space-y-4 bg-paper/30 p-6 border border-line">
-              <div className="flex justify-between items-start">
-                <span className="font-label text-3xl lg:text-4xl text-muted font-medium block">
-                  02
-                </span>
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-redact flex-shrink-0">
-                  <path d="M8 17q12 12 24 0" />
-                  <path d="M11 21l-2 3M15 23l-1 4M20 24v4M25 23l1 4M29 21l2 3" />
-                </svg>
+              <div id="step-card-02" className="space-y-4 bg-paper p-6 border border-line">
+                <div className="flex justify-between items-start">
+                  <span className="font-label text-3xl lg:text-4xl text-muted font-medium block">
+                    02
+                  </span>
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-redact flex-shrink-0">
+                    <path d="M8 17q12 12 24 0" />
+                    <path d="M11 21l-2 3M15 23l-1 4M20 24v4M25 23l1 4M29 21l2 3" />
+                  </svg>
+                </div>
+                <h3 className="font-display font-bold text-lg text-ink">Hold</h3>
+                <p className="font-sans text-sm text-muted leading-relaxed">
+                  Your balance is yours to see. No one else&apos;s.
+                </p>
               </div>
-              <h3 className="font-display font-bold text-lg text-ink">Hold</h3>
-              <p className="font-sans text-sm text-muted leading-relaxed">
-                Your balance is yours to see. No one else&apos;s.
-              </p>
-            </div>
 
-            <div id="step-card-03" className="space-y-4 bg-paper/30 p-6 border border-line">
-              <div className="flex justify-between items-start">
-                <span className="font-label text-3xl lg:text-4xl text-muted font-medium block">
-                  03
-                </span>
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-redact flex-shrink-0">
-                  <path d="M6 20c6-10 22-10 28 0-6 10-22 10-28 0z" />
-                  <circle cx="20" cy="20" r="5" strokeWidth="2" />
-                </svg>
+              <div id="step-card-03" className="space-y-4 bg-paper p-6 border border-line">
+                <div className="flex justify-between items-start">
+                  <span className="font-label text-3xl lg:text-4xl text-muted font-medium block">
+                    03
+                  </span>
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" className="text-redact flex-shrink-0">
+                    <path d="M6 20c6-10 22-10 28 0-6 10-22 10-28 0z" />
+                    <circle cx="20" cy="20" r="5" strokeWidth="2" />
+                  </svg>
+                </div>
+                <h3 className="font-display font-bold text-lg text-ink">Reveal, on your terms</h3>
+                <p className="font-sans text-sm text-muted leading-relaxed">
+                  Withdraw when you need to. Nothing about your holdings is exposed until you choose to move it.
+                </p>
               </div>
-              <h3 className="font-display font-bold text-lg text-ink">Reveal, on your terms</h3>
-              <p className="font-sans text-sm text-muted leading-relaxed">
-                Withdraw when you need to. Nothing about your holdings is exposed until you choose to move it.
-              </p>
             </div>
           </div>
         </div>
-      </div>
-      </section>
-
-      <section
-        id="shielding-section"
-        className="py-12 bg-room"
-      >
-        <div className="text-center max-w-2xl mx-auto mb-8 px-6 sm:px-0">
-          <span className="font-label text-xs uppercase tracking-[0.04em] text-paper-text/60 block mb-2">
-            VAULT SETUP
-          </span>
-          <h2 className="font-display font-semibold text-2xl sm:text-3xl lg:text-4xl text-paper-text tracking-tight mb-4">
-            Initiate Balance Redaction
-          </h2>
-          <p className="font-sans text-sm sm:text-base text-paper-text/70">
-            Configure your zero-knowledge private ledger profile. Verify your asset vulnerability and generate your secure keys.
-          </p>
-        </div>
-
-        <InteractiveShieldingTerminal />
       </section>
 
       <section
         id="duress-mode"
-        className="py-12 bg-room"
+        className="py-8 bg-room"
       >
-        <div className="max-w-[1100px] mx-auto mb-8 px-6 sm:px-0">
+        <div className="max-w-[1320px] mx-auto mb-6 px-8">
           <span className="font-label text-xs uppercase tracking-[0.04em] text-paper-text/60 block mb-2">
             PHYSICAL DEFENSE
           </span>
@@ -273,10 +256,10 @@ export default function LandingPage() {
           </h2>
         </div>
 
-        <div ref={duressRef} className="max-w-[1100px] mx-auto paper-elevation-wrapper">
-          <div className="deckled-paper paper-grain bg-paper text-ink p-8 md:p-12 rounded-none border border-line/30 relative overflow-hidden">
-            <p className="font-sans text-base sm:text-lg text-muted leading-relaxed max-w-3xl mb-8">
-              Set a duress PIN. If you&apos;re ever forced to open your wallet, it shows a <UnsealRedactionBar extraPrefix="low, harmless " unsealed={duressUnsealed}>balance</UnsealRedactionBar> instead of the real one. Nobody has to know there was ever anything else to see.
+        <div ref={duressRef} className="max-w-[1320px] mx-auto paper-elevation-wrapper">
+          <div className="deckled-paper paper-grain bg-paper text-ink p-6 md:p-8 rounded-none border border-line/30 relative overflow-hidden">
+            <p className="font-sans text-base sm:text-lg text-muted leading-relaxed max-w-3xl mb-6">
+              Set a duress PIN. If you&apos;re ever forced to open your wallet, it shows a low, harmless balance instead of the real one. Nobody has to know there was ever anything else to see.
             </p>
 
             <InteractiveDuressDemo />
@@ -286,17 +269,17 @@ export default function LandingPage() {
 
       <section
         id="monad-section"
-        className="py-12 bg-room"
+        className="py-8 bg-room"
       >
-        <div ref={monadRef} className="max-w-[1100px] mx-auto paper-elevation-wrapper">
-          <div className="deckled-paper paper-grain bg-paper text-ink p-8 md:p-12 rounded-none border border-line/30 relative overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div ref={monadRef} className="max-w-[1320px] mx-auto paper-elevation-wrapper">
+          <div className="deckled-paper paper-grain bg-paper text-ink p-6 md:p-8 rounded-none border border-line/30 relative overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
               <div className="lg:col-span-7 space-y-4">
                 <span className="font-label text-xs uppercase tracking-[0.04em] text-muted block">
                   INFRASTRUCTURE
                 </span>
                 <h2 className="font-display font-semibold text-2xl sm:text-3xl lg:text-4xl text-ink tracking-tight">
-                  Redact runs on Monad. Fast, low-cost, and fully compatible with the <UnsealRedactionBar extraPrefix="wallets " unsealed={monadUnsealed}>you already use</UnsealRedactionBar>.
+                  Redact runs on Monad. Fast, low-cost, and fully compatible with the wallets you already use.
                 </h2>
               </div>
 
@@ -325,44 +308,44 @@ export default function LandingPage() {
 
       <section
         id="trust-section"
-        className="py-12 bg-room"
+        className="py-8 bg-room"
       >
-        <div className="max-w-[1100px] mx-auto mb-8 px-6 sm:px-0">
+        <div className="max-w-[1320px] mx-auto mb-6 px-8">
           <span className="font-label text-xs uppercase tracking-[0.04em] text-paper-text/60 block mb-2">
-            BEFORE YOU DEPOSIT
+            TRUST & SECURITY
           </span>
           <h2 className="font-display font-semibold text-2xl sm:text-3xl lg:text-4xl text-paper-text tracking-tight">
-            Verify the architecture of Redact
+            What Redact does and doesn&apos;t do
           </h2>
         </div>
 
-        <div ref={trustRef} className="max-w-[1100px] mx-auto paper-elevation-wrapper">
-          <div className="deckled-paper paper-grain bg-paper text-ink p-8 md:p-12 rounded-none border border-line/30 relative overflow-hidden">
-            <div id="trust-qa-list" className="space-y-8 divide-y divide-line">
-              <div id="qa-item-1" className="space-y-3 pt-0">
+        <div ref={trustRef} className="max-w-[1320px] mx-auto paper-elevation-wrapper">
+          <div className="deckled-paper paper-grain bg-paper text-ink p-6 md:p-8 rounded-none border border-line/30 relative overflow-hidden">
+            <div id="trust-qa-list" className="space-y-6 divide-y divide-line">
+              <div id="qa-item-1" className="space-y-2 pt-0">
                 <h3 className="font-display text-lg sm:text-xl font-semibold text-ink">
-                  Do you hold my funds?
+                  Non-custodial
                 </h3>
                 <p className="font-sans text-sm sm:text-base text-muted leading-relaxed max-w-3xl">
-                  No. Your account is non-custodial, the same as your wallet. Redact never has access to your keys or your balance.
+                  Redact never holds your keys or your funds. Your account is yours alone, same as your wallet. Keys never leave your browser.
                 </p>
               </div>
 
-              <div id="qa-item-2" className="space-y-3 pt-8">
+              <div id="qa-item-2" className="space-y-2 pt-6">
                 <h3 className="font-display text-lg sm:text-xl font-semibold text-ink">
-                  What if I&apos;m forced to open the app under pressure?
+                  Duress mode
                 </h3>
                 <p className="font-sans text-sm sm:text-base text-muted leading-relaxed max-w-3xl">
-                  Enter your duress PIN instead of your real one. It shows a low balance and nothing about your actual holdings. There&apos;s no way to tell from the screen that a duress PIN was used.
+                  Set a duress PIN. If you&apos;re forced to open the app, entering it shows a low harmless balance instead of your real one. There&apos;s no visible difference.
                 </p>
               </div>
 
-              <div id="qa-item-3" className="space-y-3 pt-8">
+              <div id="qa-item-3" className="space-y-2 pt-6">
                 <h3 className="font-display text-lg sm:text-xl font-semibold text-ink">
-                  Is my balance actually private, or just hidden in your interface?
+                  Real privacy, not just UI hiding
                 </h3>
                 <p className="font-sans text-sm sm:text-base text-muted leading-relaxed max-w-3xl">
-                  It&apos;s private on-chain, not just visually hidden. Nobody, including us, can see your balance by looking at the <UnsealRedactionBar unsealed={trustUnsealed}>blockchain</UnsealRedactionBar>.
+                  Balances are encrypted on-chain, not visually hidden. Nobody, including us, can see your holdings by looking at the blockchain.
                 </p>
               </div>
             </div>
@@ -383,7 +366,7 @@ export default function LandingPage() {
           REDACT
         </div>
 
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
+        <div className="max-w-[1320px] mx-auto px-8 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-6 space-y-4">
               <BrandWordmark className="text-xl tracking-[0.15em] mb-3" iconSize="w-6 h-6" />
@@ -415,7 +398,7 @@ export default function LandingPage() {
               <ul className="space-y-2">
                 <li>
                   <button
-                    onClick={() => scrollToSection("shielding-section")}
+                    onClick={() => scrollToSection("how-it-works")}
                     className="font-sans text-sm text-paper-text/80 hover:text-paper-text hover:underline hover:underline-offset-4 cursor-pointer focus:outline-none"
                   >
                     Deposit

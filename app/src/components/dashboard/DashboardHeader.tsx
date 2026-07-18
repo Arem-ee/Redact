@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { BrandWordmark } from "../BrandWordmark";
 
 interface DashboardHeaderProps {
@@ -13,6 +14,8 @@ function truncateAddress(addr: string): string {
 }
 
 export function DashboardHeader({ walletAddress, onConnect, isConnecting }: DashboardHeaderProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []); // eslint-disable-line react-hooks/set-state-in-effect
   return (
     <header className="border-b border-line/10 bg-room/95 backdrop-blur-md">
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
@@ -24,7 +27,7 @@ export function DashboardHeader({ walletAddress, onConnect, isConnecting }: Dash
         </button>
 
         <div className="flex items-center gap-3">
-          {walletAddress ? (
+          {mounted && walletAddress ? (
             <span className="font-label text-xs text-paper-text/70 tracking-wider px-3 py-1.5 border border-paper-text/20 rounded-none">
               {truncateAddress(walletAddress)}
             </span>

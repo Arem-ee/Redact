@@ -109,36 +109,36 @@ function BalanceValue({ balance }: { balance: string }) {
           }}
         >
           <span className="absolute inset-0 overflow-hidden block">
-            <span
-              className={`absolute inset-0 bg-redact transition-opacity duration-300 ${
-                isRevealed ? "opacity-0 pointer-events-none" : "opacity-100"
-              }`}
-              style={{ clipPath: "polygon(0% 1.5%, 26% 0%, 51% 2.5%, 74% 0.5%, 100% 2%, 99% 98%, 76% 99.5%, 48% 97.5%, 24% 99%, 0% 98.5%)" }}
-            />
+              <span
+                className={`absolute inset-0 bg-redact/95 backdrop-blur-md transition-opacity duration-300 ${
+                  isRevealed ? "opacity-0 pointer-events-none" : "opacity-100"
+                }`}
+                style={{ clipPath: "polygon(0% 1.5%, 26% 0%, 51% 2.5%, 74% 0.5%, 100% 2%, 99% 98%, 76% 99.5%, 48% 97.5%, 24% 99%, 0% 98.5%)" }}
+              />
+            </span>
           </span>
-        </span>
-      ) : (
-        <span
-          className="absolute inset-0 pointer-events-none transition-all duration-200"
-          style={{
-            filter: isRevealed
-              ? "none"
-              : isHovered
-              ? "drop-shadow(0 0 14px rgba(178, 122, 255, 0.85))"
-              : "drop-shadow(0 0 6px rgba(75, 29, 115, 0.5))"
-          }}
-        >
-          <span className="absolute inset-0 overflow-hidden block">
-            <motion.span
-              className="absolute inset-0 bg-redact"
-              initial={{ x: "0%" }}
-              animate={{ x: isRevealed ? "101%" : "0%" }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              style={{ clipPath: "polygon(0% 1.5%, 26% 0%, 51% 2.5%, 74% 0.5%, 100% 2%, 99% 98%, 76% 99.5%, 48% 97.5%, 24% 99%, 0% 98.5%)" }}
-            />
+        ) : (
+          <span
+            className="absolute inset-0 pointer-events-none transition-all duration-200"
+            style={{
+              filter: isRevealed
+                ? "none"
+                : isHovered
+                ? "drop-shadow(0 0 14px rgba(178, 122, 255, 0.85))"
+                : "drop-shadow(0 0 6px rgba(75, 29, 115, 0.5))"
+            }}
+          >
+            <span className="absolute inset-0 overflow-hidden block">
+              <motion.span
+                className="absolute inset-0 bg-redact/95 backdrop-blur-md"
+                initial={{ x: "0%" }}
+                animate={{ x: isRevealed ? "101%" : "0%" }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                style={{ clipPath: "polygon(0% 1.5%, 26% 0%, 51% 2.5%, 74% 0.5%, 100% 2%, 99% 98%, 76% 99.5%, 48% 97.5%, 24% 99%, 0% 98.5%)" }}
+              />
+            </span>
           </span>
-        </span>
-      )}
+        )}
     </div>
   );
 }

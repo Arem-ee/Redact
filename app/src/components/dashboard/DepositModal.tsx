@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { Modal } from "./Modal";
-import { getUnlinkClient, fetchPrivateBalance } from "@/lib/unlink";
+import { getUnlinkClient } from "@/lib/unlink";
 import type { WalletClient } from "viem";
 
 interface DepositModalProps {
@@ -100,7 +100,7 @@ export function DepositModal({
             value={token}
             onChange={(e) => setToken(e.target.value)}
             disabled={isProcessing}
-            className="w-full bg-room border border-line/30 px-3 py-2 font-mono text-sm text-ink placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink"
+            className="w-full bg-room border border-line/30 px-3 py-2 font-mono text-sm text-paper-text placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink"
           />
         </div>
 
@@ -116,7 +116,7 @@ export function DepositModal({
             onChange={(e) => setAmount(e.target.value)}
             disabled={isProcessing}
             placeholder="0.0"
-            className="w-full bg-room border border-line/30 px-3 py-2 font-sans text-sm text-ink placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink"
+            className="w-full bg-room border border-line/30 px-3 py-2 font-sans text-sm text-paper-text placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink"
           />
         </div>
 
