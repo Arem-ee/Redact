@@ -30,7 +30,7 @@ Set your Unlink admin API key in `.env`:
 UNLINK_API_KEY=your_admin_api_key
 ```
 
-This key is used server-side only (in Next.js API routes) to register users and issue scoped authorization tokens. It never reaches the browser. You get one from the Unlink team.
+This key is used server-side only (in Next.js API routes) to register users and issue scoped authorization tokens. It never reaches the browser. Generate one at dashboard.unlink.xyz: sign in, create an organization, create a project, then create an API key.
 
 Then:
 
@@ -43,7 +43,7 @@ The app runs at `http://localhost:3000`. Connect a wallet (MetaMask or any injec
 
 ### Current state of the deposit flow
 
-Registration works. Private balance reads work. Duress mode works (it is a UI simulation at the moment, not yet wired to an on-chain duress mechanism, because the real implementation depends on how the contract evolves).
+Registration works. Private balance reads work. Duress mode works. It is intentionally client-side only, it never touches the chain or calls the real balance read when the duress PIN is entered, that is the whole point, there is nothing for a coerced session to expose.
 
 The actual deposit flow (moving tokens into the private balance) is partially blocked by what looks like a version mismatch between the Unlink SDK (`@unlink-xyz/sdk@0.3.0-canary.738`) and the Unlink engine. The `POST /transactions/deposit/prepare` endpoint returns HTTP 201 with a valid `tx_id` and `notes_hash`, but the SDK expects a `prepared_artifacts` field in the response that the server no longer provides. The error from the SDK is: `deposit.prepare.prepared_artifacts is missing; Engine is incompatible with this SDK version`. This has been reported upstream. When it is resolved on the engine side, the client code should start working without any changes.
 
