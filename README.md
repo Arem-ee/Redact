@@ -16,6 +16,18 @@ Deposit into a private balance that no one else can see. Check that balance priv
 
 Non-custodial. Your keys stay in your browser, always. Redact never holds them. The chain is Monad Testnet (chain ID 10143). The privacy underneath is Unlink, a privacy layer deployed as a smart contract on Monad.
 
+### Live deployment
+
+You can open https://redact-nine.vercel.app/ right now, connect a wallet configured for Monad Testnet (chain ID 10143), and see it work without setting up anything locally.
+
+### Why Monad Testnet and not Mainnet
+
+The deposit flow, the part that actually moves public tokens into a private balance, is blocked right now. The reason is a version mismatch on Unlink's own infrastructure, described in detail below. That block has nothing to do with which network the contract lives on. Deploying the same contract to Mainnet today would prove it deploys there, nothing more. It would not unblock anything real.
+
+Testnet gave us room to actually prove out everything else properly. Registration works. Private balance reads work. Real withdrawals work. Real duress mode, the actual client-side implementation with its own PIN setup in Settings and a decoy balance that shows when the duress PIN is entered, that works too. These are not simulations. They are the same code that would run on Mainnet. None of them depend on something Mainnet has that Testnet lacks.
+
+This was a choice, not a wall we hit. We wanted to ship something real that people could actually use and verify, not a deployment that says Mainnet in the config but still cannot deposit.
+
 ### Setup
 
 ```bash
@@ -43,7 +55,7 @@ The app runs at `http://localhost:3000`. Connect a wallet (MetaMask or any injec
 
 ### Current state of the deposit flow
 
-Registration works. Private balance reads work. Duress mode works. It is intentionally client-side only, it never touches the chain or calls the real balance read when the duress PIN is entered, that is the whole point, there is nothing for a coerced session to expose.
+Registration works. Private balance reads work. Withdrawals work, the real thing, sending tokens from the private balance back to any address. Duress mode works as a proper client-side implementation with its own PIN setup in Settings. You set two PINs, a standard one and a duress one. Entering the standard PIN shows your real balance. Entering the duress PIN shows a decoy balance with no visible difference on screen. The decoy balance never touches the chain and never calls the real balance read, there is nothing for a coerced session to expose.
 
 The actual deposit flow (moving tokens into the private balance) is partially blocked by what looks like a version mismatch between the Unlink SDK (`@unlink-xyz/sdk@0.3.0-canary.738`) and the Unlink engine. The `POST /transactions/deposit/prepare` endpoint returns HTTP 201 with a valid `tx_id` and `notes_hash`, but the SDK expects a `prepared_artifacts` field in the response that the server no longer provides. The error from the SDK is: `deposit.prepare.prepared_artifacts is missing; Engine is incompatible with this SDK version`. This has been reported upstream. When it is resolved on the engine side, the client code should start working without any changes.
 
