@@ -22,7 +22,7 @@ You can open https://redact-nine.vercel.app/ right now, connect a wallet configu
 
 ### Why Monad Testnet and not Mainnet
 
-The deposit flow, the part that actually moves public tokens into a private balance, is blocked right now. The reason is a version mismatch on Unlink's own infrastructure, described in detail below. That block has nothing to do with which network the contract lives on. Deploying the same contract to Mainnet today would prove it deploys there, nothing more. It would not unblock anything real.
+RedactVault is deployed on Testnet now at `0xD7F7324491c831c48dE3077E24BCfE43344919CF`. The deposit flow, the part that actually moves public tokens into a private balance, is still blocked. The reason is a version mismatch on Unlink's own infrastructure, described in detail below. That block has nothing to do with which network the contract lives on. Deploying it to Mainnet today would prove it deploys there, nothing more. It would not unblock anything real.
 
 Testnet gave us room to actually prove out everything else properly. Registration works. Private balance reads work. Real withdrawals work. Real duress mode, the actual client-side implementation with its own PIN setup in Settings and a decoy balance that shows when the duress PIN is entered, that works too. These are not simulations. They are the same code that would run on Mainnet. None of them depend on something Mainnet has that Testnet lacks.
 
@@ -61,8 +61,16 @@ The actual deposit flow (moving tokens into the private balance) is partially bl
 
 Everything else in the flow that does not depend on deposit confirmation (registration, authorization token issuance, environment info, faucet balance claims) works as expected.
 
-### Contract
+### Contracts
 
+**RedactVault**
+```
+Network:  Monad Testnet (10143)
+Address:  0xD7F7324491c831c48dE3077E24BCfE43344919CF
+Explorer: https://testnet.monadexplorer.com/address/0xD7F7324491c831c48dE3077E24BCfE43344919CF
+```
+
+**Unlink (privacy layer, deployed by Unlink)**
 ```
 Network:  Monad Testnet (10143)
 Address:  0x56a6ecda04b8bfd38c6d1d4d38f2b1867c29a4a7
