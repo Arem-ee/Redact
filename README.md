@@ -19,7 +19,7 @@ Non-custodial. Your keys stay in your browser, always. Redact never holds them. 
 ### Setup
 
 ```bash
-git clone <repo>
+git clone (https://github.com/Arem-ee/Redact.git)
 cd app
 cp .env.example .env
 ```
