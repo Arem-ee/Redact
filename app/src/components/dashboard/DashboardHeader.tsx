@@ -32,9 +32,7 @@ export function DashboardHeader({ walletAddress, onConnect, isConnecting }: Dash
 
         <div className="flex items-center gap-6">
           <a
-            href="https://docs.redact.zip"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/docs"
             className="font-label text-xs uppercase tracking-widest text-muted hover:text-ink transition-colors duration-150 cursor-pointer"
           >
             Docs

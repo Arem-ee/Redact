@@ -152,9 +152,7 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-8">
             <a
-              href="https://docs.redact.zip"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/docs"
               className="text-xs font-label uppercase tracking-widest text-muted hover:text-ink transition-colors duration-150 cursor-pointer"
             >
               Docs
