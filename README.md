@@ -1,6 +1,6 @@
 # Redact
 
-Every balance on a public blockchain is visible to anyone who looks. That's not a hypothetical problem. If your wallet address ever gets linked to your real name, someone can look up exactly how much crypto you hold, what you've done with it, where it came from. That visibility has consequences. There are documented cases of people being extorted after their on-chain holdings were discovered. The amounts were sometimes small. It didn't matter.
+Every balance on a public blockchain is visible to anyone who looks, that's not a hypothetical problem. If your wallet address ever gets linked to your real name, someone can look up exactly how much crypto you hold, what you've done with it, where it came from. That visibility has consequences. There are documented cases of people being extorted after their on-chain holdings were discovered. The amounts were sometimes small. It didn't matter.
 
 This is the problem we wanted to solve for Monad.
 
