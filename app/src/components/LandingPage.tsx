@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import Image from "next/image";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { InteractiveBlockExplorer } from "./InteractiveBlockExplorer";
 import { InteractiveDuressDemo } from "./InteractiveDuressDemo";
 import { BrandWordmark } from "./BrandWordmark";
-import { ApertureIris } from "./ApertureIris";
 import { DissolvingAddress } from "./DissolvingAddress";
 import { FakeExplorerDemo } from "./FakeExplorerDemo";
 import { useInView } from "./useInView";
@@ -38,11 +38,12 @@ function AnimatedCountUp({ value, suffix = "", prefix = "" }: { value: number; s
   );
 }
 
+const GAS_FEES = ["$12.48", "$4.90", "$0.82", "<$0.01"];
+
 function GasFeeCountdown() {
   const [ref, inView] = useInView(0.5);
   const [phase, setPhase] = useState(0);
-  const started = useRef(false);
-  const values = ["$12.48", "$4.90", "$0.82", "<$0.01"];
+  const values = GAS_FEES;
   const phases = useRef(false);
 
   useEffect(() => {
@@ -52,7 +53,7 @@ function GasFeeCountdown() {
     values.forEach((_, i) => {
       setTimeout(() => setPhase(i + 1), i * 400 + 200);
     });
-  }, [inView]);
+  }, [inView, values]);
 
   return (
     <span ref={ref}>
@@ -72,8 +73,6 @@ export default function LandingPage() {
   const [trustRef, trustInView] = useInView(0.2);
   const [problemRef, problemInView] = useInView(0.15);
   const [explorerRef, explorerInView] = useInView(0.2);
-
-  const prevScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -419,12 +418,12 @@ export default function LandingPage() {
           >
             <div className="flex items-center gap-3 text-muted/50">
               <span className="text-[10px] font-label uppercase tracking-wider">Built on</span>
-              <img src="/monad-logo.svg" alt="Monad" className="h-5 w-auto opacity-60" />
+              <Image src="/monad-logo.svg" alt="Monad" width={0} height={0} className="h-5 w-auto opacity-60" unoptimized />
             </div>
             <div className="w-px h-6 bg-line/[0.06]" />
             <div className="flex items-center gap-3 text-muted/50">
               <span className="text-[10px] font-label uppercase tracking-wider">Powered by</span>
-              <img src="/unlink-logo.svg" alt="Unlink" className="h-5 w-auto opacity-60" />
+              <Image src="/unlink-logo.svg" alt="Unlink" width={0} height={0} className="h-5 w-auto opacity-60" unoptimized />
             </div>
           </motion.div>
         </div>

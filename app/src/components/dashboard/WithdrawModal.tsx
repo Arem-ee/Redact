@@ -46,32 +46,28 @@ export function WithdrawModal({
 
   useEffect(() => {
     if (!open) return;
-    setBalances(null);
-    setToken("");
-    setAmount("");
-    setRecipient("");
-    setStage("idle");
-    setTxHash(null);
-    setError(null);
-    (async () => {
+    const id = setTimeout(() => {
       setBalancesLoading(true);
-      try {
-        const client = await getUnlinkClient(signMessageAsync, walletClient);
-        const data = await client.getBalances();
-        const entries: BalanceEntry[] = (data?.balances ?? [])
-          .map((b: any) => ({ token: b.token, amount: b.amount ?? "0" }))
-          .filter((b: BalanceEntry) => b.token);
-        setBalances(entries);
-        const firstWithBalance = entries.find(
-          (b: BalanceEntry) => BigInt(b.amount) > 0n,
-        );
-        if (firstWithBalance) setToken(firstWithBalance.token);
-      } catch {
-        setBalances([]);
-      } finally {
-        setBalancesLoading(false);
-      }
-    })();
+      (async () => {
+        try {
+          const client = await getUnlinkClient(signMessageAsync, walletClient);
+          const data = await client.getBalances();
+          const entries: BalanceEntry[] = (data?.balances ?? [])
+            .map((b: { token: string; amount?: string }) => ({ token: b.token, amount: b.amount ?? "0" }))
+            .filter((b: BalanceEntry) => b.token);
+          setBalances(entries);
+          const firstWithBalance = entries.find(
+            (b: BalanceEntry) => BigInt(b.amount) > 0n,
+          );
+          if (firstWithBalance) setToken(firstWithBalance.token);
+        } catch {
+          setBalances([]);
+        } finally {
+          setBalancesLoading(false);
+        }
+      })();
+    }, 0);
+    return () => clearTimeout(id);
   }, [open, signMessageAsync, walletClient]);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -99,12 +95,6 @@ export function WithdrawModal({
     setStage("signing");
     try {
       const client = await getUnlinkClient(signMessageAsync, walletClient);
-
-      const rawBalances = await client.getBalances();
-      const withdrawTokenBalance = (rawBalances?.balances ?? []).find(
-        (b: any) => b.token?.toLowerCase() === token.toLowerCase(),
-      );
-      const rawAmount = withdrawTokenBalance?.amount ?? "0";
 
       const wei = BigInt(Math.floor(parseFloat(amount) * 1e18)).toString();
 

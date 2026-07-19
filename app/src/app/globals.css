@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Instrument Serif", serif;
-  --font-sans: "Geist", sans-serif;
-  --font-label: "Geist", sans-serif;
+  --font-display: var(--font-instrument-serif), serif;
+  --font-sans: var(--font-geist), sans-serif;
+  --font-label: var(--font-geist), sans-serif;
 
   --color-studio: #FAFAF8;
   --color-ink: #1A1520;

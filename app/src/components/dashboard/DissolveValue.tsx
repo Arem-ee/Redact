@@ -17,34 +17,24 @@ function maskValue(value: string): string {
 
 export function DissolveValue({ value, className = "", dissolveDelay = 3500 }: DissolveValueProps) {
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isRevealed) {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
+      const timer = setTimeout(() => {
         setIsRevealed(false);
-        setIsHovered(false);
       }, dissolveDelay);
+      timerRef.current = timer;
+      return () => clearTimeout(timer);
     }
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (revealTimerRef.current) clearTimeout(revealTimerRef.current);
-    };
   }, [isRevealed, dissolveDelay]);
 
   const handleReveal = () => {
-    if (revealTimerRef.current) clearTimeout(revealTimerRef.current);
-    setIsHovered(true);
     setIsRevealed(true);
   };
 
   const handleHide = () => {
-    if (revealTimerRef.current) clearTimeout(revealTimerRef.current);
-    setIsHovered(false);
     setIsRevealed(false);
   };
 

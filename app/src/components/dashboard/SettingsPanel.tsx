@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Modal } from "./Modal";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { saveStandardPin, saveDuressPin } from "@/lib/duress";
 
 interface SettingsPanelProps {
   open: boolean;
@@ -11,6 +12,7 @@ interface SettingsPanelProps {
 
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   const [pin, setPin] = useState("");
+  const [duressPin, setDuressPin] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -22,19 +24,15 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
     setErrorMsg("");
 
     try {
-      const res = await fetch("/api/pin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pin }),
-      });
+      await saveStandardPin(pin);
 
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error ?? `Request failed (${res.status})`);
+      if (/^\d{4}$/.test(duressPin)) {
+        await saveDuressPin(duressPin);
       }
 
       setStatus("success");
       setPin("");
+      setDuressPin("");
       setTimeout(() => {
         setStatus("idle");
         onClose();
@@ -53,7 +51,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             htmlFor="vault-pin"
             className="font-label text-xs uppercase tracking-[0.04em] text-ink block"
           >
-            Vault PIN
+            Standard PIN
           </label>
           <input
             id="vault-pin"
@@ -69,10 +67,36 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
           />
         </div>
 
+        <div className="border-t border-line/[0.06] pt-4 space-y-2">
+          <label
+            htmlFor="duress-pin"
+            className="font-label text-xs uppercase tracking-[0.04em] text-ink block"
+          >
+            Duress PIN
+          </label>
+          <input
+            id="duress-pin"
+            type="password"
+            inputMode="numeric"
+            pattern="[0-9]{4}"
+            maxLength={4}
+            value={duressPin}
+            onChange={(e) => setDuressPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+            placeholder="4-digit duress PIN"
+            disabled={status === "loading"}
+            className="w-full border border-line/[0.08] bg-studio text-ink p-3 text-sm font-sans focus:outline-2 focus:outline-ink tracking-widest text-center disabled:bg-studio/50 disabled:text-muted disabled:cursor-not-allowed"
+          />
+          <p className="font-sans text-xs text-muted leading-relaxed">
+            If someone forces you to unlock the vault, enter this duress PIN instead.
+            It will show a decoy balance of <strong>$0.00</strong> with no visible
+            difference from the real view.
+          </p>
+        </div>
+
         {status === "success" && (
           <div className="flex items-center gap-2 text-emerald-700 text-sm font-sans">
             <CheckCircle size={16} />
-            <span>PIN saved</span>
+            <span>PINs saved</span>
           </div>
         )}
 
@@ -94,7 +118,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
               Saving...
             </>
           ) : (
-            "Save PIN"
+            "Save PINs"
           )}
         </button>
       </form>

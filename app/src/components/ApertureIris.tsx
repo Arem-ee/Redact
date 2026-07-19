@@ -30,7 +30,7 @@ const BLADE_POLYGON = [
 export function ApertureIris({ size = 320, isOpen, children, className = "" }: ApertureIrisProps) {
   const prefersReducedMotion = useReducedMotion();
   const [breathOffset, setBreathOffset] = useState(0);
-  const startRef = useRef(Date.now());
+  const startRef = useRef<number>(0);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {

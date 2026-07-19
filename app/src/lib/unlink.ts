@@ -27,8 +27,8 @@ export async function getUnlinkClient(
       ? {
           getAddress: async () =>
             (walletClient.account as { address: string }).address,
-          signTypedData: (typedData) =>
-            walletClient.signTypedData(typedData as any),
+          signTypedData: (typedData: unknown) =>
+            walletClient.signTypedData(typedData as Parameters<typeof walletClient.signTypedData>[0]) as Promise<string>,
         }
       : undefined;
   _client = createUnlinkClient({

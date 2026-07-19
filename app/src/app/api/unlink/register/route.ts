@@ -3,7 +3,7 @@ import { createUnlinkAdmin, createUnlinkAuthRoutes } from "@unlink-xyz/sdk/admin
 
 const apiKey = process.env.UNLINK_API_KEY;
 
-let routes: ReturnType<typeof createUnlinkAuthRoutes<{}>> | null = null;
+let routes: ReturnType<typeof createUnlinkAuthRoutes<Record<string, never>>> | null = null;
 
 function getRoutes() {
   if (routes) return routes;
@@ -11,7 +11,7 @@ function getRoutes() {
     throw new Error("UNLINK_API_KEY environment variable is not set");
   }
   const admin = createUnlinkAdmin({ environment: "monad-testnet", apiKey });
-  routes = createUnlinkAuthRoutes<{}>({
+  routes = createUnlinkAuthRoutes<Record<string, never>>({
     admin,
     authenticate: async () => ({}),
     authorizeUnlinkAddress: async () => true,

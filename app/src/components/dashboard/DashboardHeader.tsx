@@ -15,7 +15,10 @@ function truncateAddress(addr: string): string {
 
 export function DashboardHeader({ walletAddress, onConnect, isConnecting }: DashboardHeaderProps) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
+  }, []);
 
   return (
     <header className="border-b border-line/[0.06] bg-studio/95 backdrop-blur-md">

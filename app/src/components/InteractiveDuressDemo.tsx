@@ -44,7 +44,7 @@ export function InteractiveDuressDemo() {
   const [unlockType, setUnlockType] = useState<"standard" | "duress" | null>(null);
   const [showError, setShowError] = useState(false);
   const [tiltOffset, setTiltOffset] = useState(0);
-  const startRef = useRef(Date.now());
+  const startRef = useRef<number>(0);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {

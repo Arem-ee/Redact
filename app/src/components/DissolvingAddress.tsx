@@ -7,13 +7,6 @@ const FULL_ADDR = "0x91D4e9b2AB8c3f1a7E5f6D0a9B3c7E8f1A2b3C4d";
 const DISPLAY_LEN = 16;
 const DOTS = "•".repeat(DISPLAY_LEN);
 
-function pickChars(len: number): string {
-  const hex = "0123456789abcdef";
-  let s = "";
-  for (let i = 0; i < len; i++) s += hex[Math.floor(Math.random() * 16)];
-  return "0x" + s + "...";
-}
-
 function shuffleString(s: string, intensity: number): string {
   const arr = s.split("");
   const swaps = Math.floor(intensity * arr.length);
@@ -37,7 +30,6 @@ export function DissolvingAddress() {
     if (prefersReducedMotion) return;
 
     startRef.current = Date.now();
-    const TICK = 40;
 
     const tick = () => {
       const elapsed = (Date.now() - startRef.current) / 1000;
