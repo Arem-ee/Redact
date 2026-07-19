@@ -1,64 +1,105 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
-import { InteractiveBlockExplorer } from "./InteractiveBlockExplorer";
-import { InteractiveDuressDemo } from "./InteractiveDuressDemo";
+import { ArrowUpRight, Shield, CheckCircle } from "lucide-react";
 import { BrandWordmark } from "./BrandWordmark";
 import { DissolvingAddress } from "./DissolvingAddress";
-import { FakeExplorerDemo } from "./FakeExplorerDemo";
 import { useInView } from "./useInView";
 
-function AnimatedCountUp({ value, suffix = "", prefix = "" }: { value: number; suffix?: string; prefix?: string }) {
-  const [ref, inView] = useInView(0.5);
-  const [display, setDisplay] = useState(0);
-  const started = useRef(false);
-
-  useEffect(() => {
-    if (!inView || started.current) return;
-    started.current = true;
-    const dur = 1500;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / dur, 1);
-      const ease = 1 - Math.pow(1 - p, 3);
-      setDisplay(Math.round(ease * value));
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [inView, value]);
-
+function PinDot({ filled }: { filled: boolean }) {
   return (
-    <span ref={ref}>
-      {prefix}{display.toLocaleString()}{suffix}
-    </span>
+    <div
+      className={`w-3 h-3 border transition-colors duration-150 ${
+        filled ? "bg-redact border-redact" : "border-line bg-transparent"
+      }`}
+    />
   );
 }
 
-const GAS_FEES = ["$12.48", "$4.90", "$0.82", "<$0.01"];
-
-function GasFeeCountdown() {
-  const [ref, inView] = useInView(0.5);
-  const [phase, setPhase] = useState(0);
-  const values = GAS_FEES;
-  const phases = useRef(false);
-
-  useEffect(() => {
-    if (!inView || phases.current) return;
-    phases.current = true;
-
-    values.forEach((_, i) => {
-      setTimeout(() => setPhase(i + 1), i * 400 + 200);
-    });
-  }, [inView, values]);
-
+function MiniBalanceMockup() {
   return (
-    <span ref={ref}>
-      {values[Math.min(phase, values.length - 1)]}
-    </span>
+    <div className="bg-white shadow-[0_2px_16px_rgba(26,21,32,0.04)] rounded-none p-5 max-w-[280px] mx-auto">
+      <p className="font-label text-[10px] uppercase tracking-[0.06em] text-muted mb-3">Your balance</p>
+      <div className="min-h-[54px]">
+        <div className="font-display font-bold text-xl text-ink tracking-tight relative inline-block cursor-default select-none">
+          <span style={{ filter: "blur(3px)", opacity: 0.25 }}>$$•••,•••,•••.00</span>
+        </div>
+      </div>
+      <div className="flex gap-2 mt-4">
+        <div className="flex-1 bg-redact/10 h-8" />
+        <div className="flex-1 border border-redact/10 h-8" />
+      </div>
+    </div>
+  );
+}
+
+function MiniPinMockup() {
+  return (
+    <div className="bg-white shadow-[0_2px_16px_rgba(26,21,32,0.04)] rounded-none p-6 max-w-[240px] mx-auto space-y-4">
+      <h3 className="font-display font-bold text-sm text-ink text-center">Enter PIN</h3>
+      <div className="flex justify-center gap-2.5">
+        <PinDot filled />
+        <PinDot filled />
+        <PinDot filled />
+        <PinDot filled />
+      </div>
+    </div>
+  );
+}
+
+function MiniConfirmMockup() {
+  return (
+    <div className="bg-white shadow-[0_2px_16px_rgba(26,21,32,0.04)] rounded-none p-5 max-w-[280px] mx-auto space-y-3">
+      <p className="font-label text-[10px] uppercase tracking-[0.06em] text-muted">Withdraw</p>
+      <div className="bg-studio border border-line/[0.06] p-3">
+        <div className="flex items-center gap-2">
+          <CheckCircle size={14} className="text-emerald-700" />
+          <p className="font-sans text-xs text-emerald-700 font-semibold">Withdraw confirmed</p>
+        </div>
+        <p className="font-mono text-[10px] text-muted break-all mt-1">tx: 0xa0c8...</p>
+      </div>
+    </div>
+  );
+}
+
+function MiniDepositMockup() {
+  return (
+    <div className="bg-white shadow-[0_2px_16px_rgba(26,21,32,0.04)] rounded-none p-5 max-w-[280px] mx-auto space-y-3">
+      <p className="font-label text-[10px] uppercase tracking-[0.06em] text-muted">Deposit</p>
+      <div className="space-y-2">
+        <div className="border border-line/[0.08] bg-studio px-3 py-2 font-sans text-[11px] text-muted">0x0000...</div>
+        <div className="border border-line/[0.08] bg-studio px-3 py-2 font-sans text-[11px] text-muted">100.0</div>
+      </div>
+      <div className="bg-redact text-white text-[10px] font-label uppercase tracking-wider text-center py-2.5">Deposit</div>
+    </div>
+  );
+}
+
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-line/[0.06]">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between py-5 text-left cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
+      >
+        <span className="font-display text-lg text-ink pr-4">{question}</span>
+        <span className={`text-muted transition-transform duration-200 shrink-0 ${open ? "rotate-45" : ""}`}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2">
+            <line x1="8" y1="2" x2="8" y2="14" />
+            <line x1="2" y1="8" x2="14" y2="8" />
+          </svg>
+        </span>
+      </button>
+      {open && (
+        <div className="pb-5 pr-4">
+          <p className="font-sans text-sm text-muted leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -67,12 +108,10 @@ export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
-  const [howRef, howInView] = useInView(0.2);
-  const [duressRef, duressInView] = useInView(0.2);
-  const [monadRef, monadInView] = useInView(0.2);
-  const [trustRef, trustInView] = useInView(0.2);
-  const [problemRef, problemInView] = useInView(0.15);
-  const [explorerRef, explorerInView] = useInView(0.2);
+  const [privacyRef, privacyInView] = useInView(0.15);
+  const [trustRef, trustInView] = useInView(0.15);
+  const [howRef, howInView] = useInView(0.15);
+  const [faqRef, faqInView] = useInView(0.15);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -98,6 +137,7 @@ export default function LandingPage() {
       title: "Deposit",
       desc: "Send stablecoins into your private balance. They leave the public ledger the moment they arrive.",
       detail: "Your funds leave the public ledger instantly. No waiting, no traces.",
+      Mini: MiniDepositMockup,
     },
     {
       id: "hold",
@@ -105,6 +145,7 @@ export default function LandingPage() {
       title: "Hold",
       desc: "Your balance is yours to see. No one else can read it.",
       detail: "Read your balance anytime. No one else can.",
+      Mini: MiniBalanceMockup,
     },
     {
       id: "reveal",
@@ -112,6 +153,7 @@ export default function LandingPage() {
       title: "Reveal, on your terms",
       desc: "Withdraw when you need to. Nothing is exposed until you choose to move it.",
       detail: "Withdraw to any address. Your privacy, your schedule.",
+      Mini: MiniConfirmMockup,
     },
   ];
 
@@ -127,6 +169,53 @@ export default function LandingPage() {
     {
       title: "Real privacy, not just UI hiding",
       desc: "Balances are encrypted on-chain, not visually hidden. Nobody, including us, can see your holdings by looking at the blockchain.",
+    },
+    {
+      title: "Built on Monad and Unlink",
+      desc: "Monad delivers throughput and verifiability. Unlink handles the cryptography. Redact is the surface you actually use.",
+    },
+  ];
+
+  const faqs = [
+    {
+      q: "Who can see my balance?",
+      a: "No one. Your balance is encrypted on-chain. Not us, not the network, not anyone looking at the blockchain explorer. You are the only person who can read it.",
+    },
+    {
+      q: "What happens if I forget my PIN?",
+      a: "The PIN is client-side only. It controls what the app displays, not what exists on-chain. You can recover by disconnecting and reconnecting your wallet, the PIN lock is local to your browser session.",
+    },
+    {
+      q: "Is Redact non-custodial?",
+      a: "Yes. Your keys stay in your browser at all times. Redact never holds them. Deposits and withdrawals are signed by your wallet directly.",
+    },
+    {
+      q: "Does duress mode look different from the real view?",
+      a: "No. The duress PIN shows the same layout, same structure, same styling. The only thing different is the balance number and the activity list. There is no indicator that duress mode is active.",
+    },
+  ];
+
+  const privacyCards = [
+    {
+      label: "Balance",
+      headline: "Your balance is hidden by default",
+      body: "Numbers stay blurred until you hover. After a few seconds, it dissolves back. No one over your shoulder sees anything.",
+      tint: "bg-[#F2EFF6]",
+      Mini: MiniBalanceMockup,
+    },
+    {
+      label: "PIN lock",
+      headline: "Four digits between your wallet and your vault",
+      body: "Every time you connect, you enter a PIN. Without it, the vault stays locked. Nothing leaks before you authenticate.",
+      tint: "bg-[#F8F6F2]",
+      Mini: MiniPinMockup,
+    },
+    {
+      label: "Withdraw",
+      headline: "Move funds back out, on your terms",
+      body: "Nothing is exposed until you choose to withdraw. Send to any address, any time. The chain sees a fresh transaction with no history.",
+      tint: "bg-[#F0EDF5]",
+      Mini: MiniConfirmMockup,
     },
   ];
 
@@ -170,7 +259,7 @@ export default function LandingPage() {
 
       <section
         id="hero-section"
-        className="pt-28 pb-20 md:pt-32 md:pb-24 bg-studio relative"
+        className="pt-28 pb-16 md:pt-36 md:pb-20 bg-studio relative"
       >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#B27AFF]/[0.03] blur-[120px]" />
@@ -185,14 +274,18 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <div className="font-mono text-[clamp(2rem,6vw,4.5rem)] font-semibold text-ink tracking-tight leading-none select-none">
               <DissolvingAddress />
             </div>
           </div>
 
-          <p className="font-display text-xl sm:text-2xl md:text-3xl text-muted leading-snug max-w-xl mx-auto mb-10">
+          <p className="font-display text-xl sm:text-2xl md:text-3xl text-muted leading-snug max-w-xl mx-auto mb-8">
             Redact hides your balance. You decide when it is shown.
+          </p>
+
+          <p className="font-sans text-base text-muted max-w-md mx-auto mb-8 leading-relaxed">
+            Wallet addresses are public. If your address is ever linked to your name, anyone can look up exactly what you hold. That visibility has real consequences.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -205,7 +298,7 @@ export default function LandingPage() {
             </button>
             <button
               id="hero-secondary-cta"
-              onClick={() => scrollToSection("problem-section")}
+              onClick={() => scrollToSection("privacy-section")}
               className="text-ink text-sm font-label uppercase tracking-wider py-4 px-6 text-center hover:text-redact cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2 transition-all duration-200 hover:scale-[1.02] active:scale-95"
             >
               See how it works
@@ -215,92 +308,113 @@ export default function LandingPage() {
       </section>
 
       <section
-        id="problem-section"
-        className="py-24 md:py-28 bg-studio relative overflow-hidden"
+        id="privacy-section"
+        className="py-24 md:py-32 bg-studio"
       >
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#B27AFF]/[0.02] blur-[100px]" />
-        </div>
-
         <div className="max-w-[1200px] mx-auto px-8">
-          <motion.div
-            className="max-w-[520px]"
-            initial={prefersReducedMotion ? {} : { y: 40, opacity: 0 }}
-            animate={problemInView ? { y: 0, opacity: 1 } : {}}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <div className="mb-14">
             <span className="font-label text-xs uppercase tracking-[0.08em] text-muted block mb-3">
-              THE PROBLEM
+              YOUR PRIVACY
             </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.5rem] text-ink tracking-tight leading-[1.1] mb-6">
-              Everyone can already see what you are worth
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.5rem] text-ink tracking-tight leading-[1.1] max-w-lg">
+              Your balance stays yours
             </h2>
-            <p className="text-base sm:text-lg text-muted leading-relaxed">
-              Wallet addresses are public. Balances are public. Every transaction is public. If your address is ever linked to your name, anyone can look up exactly how much crypto you hold. That visibility has led to real extortion, documented cases, rising every year.
-            </p>
-          </motion.div>
+          </div>
 
-          <div ref={problemRef} className="mt-12">
-            <InteractiveBlockExplorer />
+          <div ref={privacyRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {privacyCards.map((card, i) => (
+              <motion.div
+                key={card.label}
+                initial={prefersReducedMotion ? {} : { y: 30, opacity: 0 }}
+                animate={privacyInView ? { y: 0, opacity: 1 } : {}}
+                transition={{ duration: 0.5, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className={`${card.tint} p-8 h-full flex flex-col`}>
+                  <span className="font-label text-[10px] uppercase tracking-[0.08em] text-muted mb-6">
+                    {card.label}
+                  </span>
+                  <div className="mb-8">
+                    <card.Mini />
+                  </div>
+                  <h3 className="font-display text-xl font-semibold text-ink mb-3 leading-tight">
+                    {card.headline}
+                  </h3>
+                  <p className="font-sans text-sm text-muted leading-relaxed">
+                    {card.body}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 md:py-28 bg-studio flex flex-col items-center justify-center text-center relative">
+      <section
+        id="trust-section"
+        className="py-24 md:py-32 bg-[#15101A] relative overflow-hidden"
+      >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#B27AFF]/[0.02] blur-[100px]" />
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-[#B27AFF]/[0.04] blur-[180px]" />
         </div>
 
-        <motion.div
-          initial={prefersReducedMotion ? {} : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="px-8"
-        >
-          <div className="w-12 h-px bg-line/[0.06] mb-8 mx-auto" />
-          <p className="font-display text-2xl sm:text-3xl md:text-4xl text-ink max-w-2xl leading-relaxed tracking-tight italic select-none">
-            {prefersReducedMotion ? (
-              <span>{"\u201CThe moment your address has a name, your balance has a target.\u201D"}</span>
-            ) : (
-              <LetterReveal text={"\u201CThe moment your address has a name, your balance has a target.\u201D"} />
-            )}
-          </p>
-          <div className="w-12 h-px bg-line/[0.06] mt-8 mx-auto" />
-        </motion.div>
-      </section>
+        <div ref={trustRef} className="max-w-[1200px] mx-auto px-8 relative z-10">
+          <div className="mb-14">
+            <span className="font-label text-xs uppercase tracking-[0.08em] text-white/40 block mb-3">
+              BUILT TO BE TRUSTED
+            </span>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.5rem] text-white tracking-tight leading-[1.1] max-w-lg">
+              Privacy that you can verify
+            </h2>
+          </div>
 
-      <section className="min-h-screen flex items-center justify-center bg-studio relative">
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#B27AFF]/[0.015] blur-[150px]" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {trustItems.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={prefersReducedMotion ? {} : { y: 30, opacity: 0 }}
+                animate={trustInView ? { y: 0, opacity: 1 } : {}}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="bg-[#1D1724] p-6 h-full">
+                  <div className="w-8 h-8 mb-4 flex items-center justify-center bg-[#2A2332]">
+                    <Shield size={14} className="text-[#B27AFF]/70" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold text-white mb-2 leading-tight">
+                    {item.title}
+                  </h3>
+                  <p className="font-sans text-sm text-[#B0A8B8] leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            className="mt-16 pt-10 border-t border-white/[0.06] flex items-center gap-8 justify-center"
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+            animate={trustInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <div className="flex items-center gap-3 text-[#B0A8B8]/40">
+              <span className="text-[10px] font-label uppercase tracking-wider">Built on</span>
+              <Image src="/monad-logo.svg" alt="Monad" width={0} height={0} className="h-5 w-auto opacity-50" unoptimized />
+            </div>
+            <div className="w-px h-6 bg-white/[0.08]" />
+            <div className="flex items-center gap-3 text-[#B0A8B8]/40">
+              <span className="text-[10px] font-label uppercase tracking-wider">Powered by</span>
+              <Image src="/unlink-logo.svg" alt="Unlink" width={0} height={0} className="h-5 w-auto opacity-50" unoptimized />
+            </div>
+          </motion.div>
         </div>
-        <motion.div
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center px-8 max-w-3xl"
-        >
-          <p className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-ink leading-[1.06] tracking-tight">
-            Privacy is not hiding.
-          </p>
-          <p className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-muted leading-[1.06] tracking-tight mt-4">
-            It is choosing.
-          </p>
-        </motion.div>
       </section>
 
       <section
         id="how-it-works"
-        className="py-24 md:py-32 bg-studio relative overflow-hidden"
+        className="py-24 md:py-32 bg-studio"
       >
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute left-1/4 top-0 w-[400px] h-[400px] rounded-full bg-[#B27AFF]/[0.02] blur-[100px]" />
-          <div className="absolute right-1/4 bottom-0 w-[400px] h-[400px] rounded-full bg-[#B27AFF]/[0.015] blur-[100px]" />
-        </div>
-
-        <div className="max-w-[1100px] mx-auto px-8">
-          <div className="mb-16 md:mb-24">
+        <div className="max-w-[1200px] mx-auto px-8">
+          <div className="mb-14">
             <span className="font-label text-xs uppercase tracking-[0.08em] text-muted block mb-3">
               HOW IT WORKS
             </span>
@@ -309,29 +423,30 @@ export default function LandingPage() {
             </h2>
           </div>
 
-          <div ref={howRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-10">
+          <div ref={howRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {steps.map((step, i) => (
               <motion.div
                 key={step.id}
                 initial={prefersReducedMotion ? {} : { y: 30, opacity: 0 }}
                 animate={howInView ? { y: 0, opacity: 1 } : {}}
                 transition={{ duration: 0.5, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="flex flex-col"
               >
-                <div className="mb-4">
-                  <span className="font-display text-5xl font-semibold text-redact/20 select-none">
+                <div className={`p-8 h-full flex flex-col ${
+                  i === 0 ? "bg-[#F2EFF6]" : i === 1 ? "bg-[#F8F6F2]" : "bg-[#F0EDF5]"
+                }`}>
+                  <div className="mb-6">
+                    <step.Mini />
+                  </div>
+                  <span className="font-display text-5xl font-semibold text-redact/15 select-none mb-3">
                     {step.number}
                   </span>
+                  <h3 className="font-display text-xl font-semibold text-ink mb-3 leading-tight">
+                    {step.title}
+                  </h3>
+                  <p className="font-sans text-sm text-muted leading-relaxed flex-1">
+                    {step.desc}
+                  </p>
                 </div>
-                <h3 className="font-display text-xl sm:text-2xl font-semibold text-ink mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-sm sm:text-base text-muted leading-relaxed flex-1">
-                  {step.desc}
-                </p>
-                <p className="text-xs text-muted/60 leading-relaxed mt-3 border-t border-line/[0.05] pt-3">
-                  {step.detail}
-                </p>
               </motion.div>
             ))}
           </div>
@@ -339,228 +454,61 @@ export default function LandingPage() {
       </section>
 
       <section
-        id="monad-section"
-        className="py-24 md:py-28 bg-studio relative overflow-hidden"
+        id="faq-section"
+        className="py-24 md:py-32 bg-studio"
       >
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute right-[-10%] top-0 w-[500px] h-[500px] rounded-full bg-[#B27AFF]/[0.02] blur-[120px]" />
-        </div>
-
-        <div className="max-w-[1200px] mx-auto px-8">
-          <div ref={monadRef} className="flex flex-col lg:flex-row lg:items-start gap-12 lg:gap-20">
-            <motion.div
-              className="lg:w-[45%]"
-              initial={prefersReducedMotion ? {} : { y: 30, opacity: 0 }}
-              animate={monadInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="font-label text-xs uppercase tracking-[0.08em] text-muted block mb-3">
-                INFRASTRUCTURE
-              </span>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.5rem] text-ink tracking-tight leading-[1.1] mb-6">
-                Redact runs on Monad. Fast, low-cost, and compatible with the wallets you already use.
-              </h2>
-              <p className="text-base text-muted leading-relaxed max-w-md">
-                Monad delivers the throughput of a centralized database with the verifiability of a public blockchain. Your wallet, your tools, everything you already use, no migration needed.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="lg:w-[55%]"
-              initial={prefersReducedMotion ? {} : { y: 30, opacity: 0 }}
-              animate={monadInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="grid grid-cols-2 gap-0 border border-line/[0.06]">
-                <div id="metric-tps" className="p-8 md:p-10 border-r border-b border-line/[0.06] text-right">
-                  <span className="font-display text-5xl font-semibold text-redact block mb-1">
-                    <AnimatedCountUp value={10000} suffix="+" />
-                  </span>
-                  <span className="text-xs text-muted uppercase tracking-wider font-label">
-                    TPS Capacity
-                  </span>
-                </div>
-                <div id="metric-cost" className="p-8 md:p-10 border-b border-line/[0.06] text-right">
-                  <span className="font-display text-5xl font-semibold text-redact block mb-1">
-                    <GasFeeCountdown />
-                  </span>
-                  <span className="text-xs text-muted uppercase tracking-wider font-label">
-                    Average Fee
-                  </span>
-                </div>
-                <div id="metric-finality" className="p-8 md:p-10 border-r border-line/[0.06] text-right col-span-1">
-                  <span className="font-display text-5xl font-semibold text-redact block mb-1">
-                    1s
-                  </span>
-                  <span className="text-xs text-muted uppercase tracking-wider font-label">
-                    Finality
-                  </span>
-                </div>
-                <div id="metric-evm" className="p-8 md:p-10 text-right col-span-1">
-                  <span className="font-display text-5xl font-semibold text-redact block mb-1">
-                    100%
-                  </span>
-                  <span className="text-xs text-muted uppercase tracking-wider font-label">
-                    EVM Compatible
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          <motion.div
-            className="mt-16 pt-10 border-t border-line/[0.04] flex items-center gap-8 justify-center"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            animate={monadInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <div className="flex items-center gap-3 text-muted/50">
-              <span className="text-[10px] font-label uppercase tracking-wider">Built on</span>
-              <Image src="/monad-logo.svg" alt="Monad" width={0} height={0} className="h-5 w-auto opacity-60" unoptimized />
-            </div>
-            <div className="w-px h-6 bg-line/[0.06]" />
-            <div className="flex items-center gap-3 text-muted/50">
-              <span className="text-[10px] font-label uppercase tracking-wider">Powered by</span>
-              <Image src="/unlink-logo.svg" alt="Unlink" width={0} height={0} className="h-5 w-auto opacity-60" unoptimized />
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section
-        id="duress-mode"
-        className="py-24 md:py-28 bg-studio relative overflow-hidden"
-      >
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute left-[-5%] top-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-[#B27AFF]/[0.02] blur-[120px]" />
-          <div className="absolute right-[5%] top-1/2 -translate-y-1/2 w-[400px] h-[400px]" style={{ opacity: 0.03 }}>
-            <svg viewBox="0 0 220 220" className="w-full h-full">
-              <circle cx="110" cy="110" r="80" fill="none" stroke="#4B1D73" strokeWidth="0.5" />
-              {Array.from({ length: 8 }).map((_, i) => (
-                <line
-                  key={i}
-                  x1={110 + 80 * Math.cos((i / 8) * Math.PI * 2)}
-                  y1={110 + 80 * Math.sin((i / 8) * Math.PI * 2)}
-                  x2={110}
-                  y2={110}
-                  stroke="#4B1D73"
-                  strokeWidth="0.3"
-                />
-              ))}
-            </svg>
-          </div>
-        </div>
-
-        <div className="max-w-[1200px] mx-auto px-8">
-          <motion.div
-            className="max-w-[480px] mb-12"
-            initial={prefersReducedMotion ? {} : { opacity: 0 }}
-            animate={duressInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6 }}
-          >
+        <div className="max-w-[780px] mx-auto px-8">
+          <div className="mb-14">
             <span className="font-label text-xs uppercase tracking-[0.08em] text-muted block mb-3">
-              PHYSICAL DEFENSE
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.5rem] text-ink tracking-tight leading-[1.1] mb-6">
-              A second passcode that shows nothing worth taking
-            </h2>
-          </motion.div>
-
-          <motion.div
-            ref={duressRef}
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            animate={duressInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <InteractiveDuressDemo />
-          </motion.div>
-        </div>
-      </section>
-
-      <section
-        id="explorer-demo"
-        className="py-24 md:py-28 bg-studio relative overflow-hidden"
-      >
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#B27AFF]/[0.015] blur-[150px]" />
-        </div>
-
-        <div className="max-w-[1200px] mx-auto px-8">
-          <motion.div
-            ref={explorerRef}
-            initial={prefersReducedMotion ? {} : { scale: 0.97, opacity: 0 }}
-            animate={explorerInView ? { scale: 1, opacity: 1 } : {}}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-center mb-12"
-          >
-            <span className="font-label text-xs uppercase tracking-[0.08em] text-muted block mb-3">
-              SEE IT IN ACTION
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.5rem] text-ink tracking-tight leading-[1.1] max-w-lg mx-auto">
-              A wallet before and after Redact
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial={prefersReducedMotion ? {} : { scale: 0.95, opacity: 0 }}
-            animate={explorerInView ? { scale: 1, opacity: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <FakeExplorerDemo />
-          </motion.div>
-        </div>
-      </section>
-
-      <section
-        id="trust-section"
-        className="py-24 md:py-28 bg-studio"
-      >
-        <div className="max-w-[1100px] mx-auto px-8">
-          <div className="max-w-[520px] mb-14">
-            <span className="font-label text-xs uppercase tracking-[0.08em] text-muted block mb-3">
-              TRUST &amp; SECURITY
+              QUESTIONS
             </span>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.5rem] text-ink tracking-tight leading-[1.1]">
-              What Redact does and does not do
+              What you might be wondering
             </h2>
           </div>
 
-          <div ref={trustRef} className="space-y-0">
-            {trustItems.map((item, i) => (
+          <div ref={faqRef}>
+            {faqs.map((faq, i) => (
               <motion.div
-                key={item.title}
-                initial={prefersReducedMotion ? {} : { scale: 0.98, opacity: 0 }}
-                animate={trustInView ? { scale: 1, opacity: 1 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className={`group border-t border-line/[0.05] py-8 md:py-10 ${
-                  i === trustItems.length - 1 ? "border-b border-line/[0.05]" : ""
-                }`}
+                key={faq.q}
+                initial={prefersReducedMotion ? {} : { y: 20, opacity: 0 }}
+                animate={faqInView ? { y: 0, opacity: 1 } : {}}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
               >
-                <div className="flex items-start gap-5 md:gap-8 lg:gap-12">
-                  <div className="flex-shrink-0 mt-1.5 w-8 h-8 border border-line/[0.08] flex items-center justify-center text-redact/40 group-hover:text-redact/70 transition-colors duration-200">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="0.8">
-                      <circle cx="7" cy="7" r="3" />
-                      <path d="M14 7q-7-7-14 0" />
-                    </svg>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-display text-xl sm:text-2xl font-semibold text-ink mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-muted leading-relaxed max-w-2xl">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
+                <FaqItem question={faq.q} answer={faq.a} />
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section
+        id="cta-section"
+        className="py-24 md:py-32 bg-studio relative"
+      >
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#B27AFF]/[0.02] blur-[150px]" />
+        </div>
+
+        <div className="max-w-[700px] mx-auto px-8 text-center relative">
+          <p className="font-display text-4xl sm:text-5xl md:text-6xl text-ink leading-[1.08] tracking-tight mb-6">
+            Privacy is not hiding. It is choosing.
+          </p>
+          <p className="font-sans text-base sm:text-lg text-muted mb-10 max-w-md mx-auto leading-relaxed">
+            Open the app, connect your wallet, and see it for yourself. No setup, no signup, nothing to install.
+          </p>
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="bg-redact text-white text-sm font-label uppercase tracking-wider py-4 px-10 hover:bg-[#3E1660] focus:outline-2 focus:outline-ink focus:outline-offset-2 transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer"
+          >
+            Open Redact
+          </button>
         </div>
       </section>
 
       <footer
         id="app-footer"
-        className="w-full bg-studio text-ink pt-20 pb-12 mt-16 relative overflow-hidden"
+        className="w-full bg-studio text-ink pt-20 pb-12 relative overflow-hidden"
       >
         <div className="absolute right-[-5%] bottom-[-10%] text-[12rem] sm:text-[18rem] md:text-[24rem] lg:text-[30rem] font-display font-black text-ink/[0.02] pointer-events-none select-none tracking-tighter leading-none z-0 uppercase">
           REDACT
@@ -602,23 +550,23 @@ export default function LandingPage() {
                       onClick={() => scrollToSection("how-it-works")}
                       className="text-sm text-muted hover:text-ink transition-colors cursor-pointer focus:outline-none"
                     >
-                      Deposit
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => scrollToSection("duress-mode")}
-                      className="text-sm text-muted hover:text-ink transition-colors cursor-pointer focus:outline-none"
-                    >
-                      Duress mode
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => scrollToSection("how-it-works")}
-                      className="text-sm text-muted hover:text-ink transition-colors cursor-pointer focus:outline-none"
-                    >
                       How it works
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection("privacy-section")}
+                      className="text-sm text-muted hover:text-ink transition-colors cursor-pointer focus:outline-none"
+                    >
+                      Privacy
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => scrollToSection("trust-section")}
+                      className="text-sm text-muted hover:text-ink transition-colors cursor-pointer focus:outline-none"
+                    >
+                      Security
                     </button>
                   </li>
                 </ul>
@@ -629,6 +577,14 @@ export default function LandingPage() {
                   Elsewhere
                 </h4>
                 <ul className="space-y-2">
+                  <li>
+                    <a
+                      href="/docs"
+                      className="text-sm text-muted hover:text-ink inline-flex items-center gap-1 transition-colors cursor-pointer focus:outline-none"
+                    >
+                      Docs
+                    </a>
+                  </li>
                   <li>
                     <a
                       href="https://github.com/redact-privacy"
@@ -664,25 +620,5 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  );
-}
-
-function LetterReveal({ text }: { text: string }) {
-  const prefersReducedMotion = useReducedMotion();
-  return (
-    <span className="inline">
-      {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          className="inline-block"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.03, delay: i * 0.015 }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </motion.span>
-      ))}
-    </span>
   );
 }
