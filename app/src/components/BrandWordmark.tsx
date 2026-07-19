@@ -4,7 +4,7 @@ import { BrandIcon } from "./BrandIcon";
 
 export function BrandWordmark({ className = "text-xl", iconSize = "w-6 h-6" }: { className?: string; iconSize?: string }) {
   return (
-    <div className={`flex items-center gap-2 select-none font-sans font-black tracking-[0.2em] uppercase text-paper-text ${className}`}>
+    <div className={`flex items-center gap-2 select-none font-sans font-black tracking-[0.2em] uppercase text-ink ${className}`}>
       <BrandIcon className={iconSize} />
       <span className="flex items-center">
         <span>R</span>

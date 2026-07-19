@@ -51,7 +51,7 @@ export function RedactionBar({ children }: RedactionBarProps) {
   return (
     <span
       id={`redact-bar-${children.toLowerCase().replace(/[^a-z0-9]/g, "")}`}
-      className="relative inline-block cursor-pointer align-baseline select-none px-1 mx-0.5"
+      className="relative inline-block cursor-pointer align-baseline select-none mx-0.5"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleTrigger}
@@ -64,52 +64,92 @@ export function RedactionBar({ children }: RedactionBarProps) {
       }}
       aria-label="Redacted word. Hover or tap to reveal."
     >
-      <span className="font-display font-semibold tracking-tight text-ink">
+      <span className="font-display font-semibold tracking-tight text-ink relative z-10">
         {children}
       </span>
 
-      {prefersReducedMotion ? (
-        <span
-          className="absolute inset-0 pointer-events-none transition-all duration-200"
-          style={{
-            filter: isRevealed
-              ? "drop-shadow(0 0 0px rgba(0,0,0,0))"
-              : isHovered
-              ? "drop-shadow(0 0 12px rgba(178, 122, 255, 0.75))"
-              : "drop-shadow(0 0 5px rgba(75, 29, 115, 0.45))"
-          }}
-        >
-          <span className="absolute inset-0 overflow-hidden block">
+      <span className="absolute inset-0 pointer-events-none" style={{ top: -2, bottom: -2, left: -1, right: -1 }}>
+        {prefersReducedMotion ? (
+          <>
             <span
-              className={`absolute inset-0 bg-redact/95 backdrop-blur-md transition-opacity duration-300 ${
-                isRevealed ? "opacity-0 pointer-events-none" : "opacity-100"
-              }`}
-              style={{ clipPath: "polygon(0% 1.5%, 26% 0%, 51% 2.5%, 74% 0.5%, 100% 2%, 99% 98%, 76% 99.5%, 48% 97.5%, 24% 99%, 0% 98.5%)" }}
+              className="absolute inset-x-0 top-0 overflow-hidden"
+              style={{
+                height: "50%",
+                transform: isRevealed ? "scaleY(0)" : "scaleY(1)",
+                transformOrigin: "top center",
+                transition: "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
+              <span className="absolute inset-0 bg-gradient-to-b from-[#E4E0E8] to-[#D4D0D8]" />
+            </span>
+            <span
+              className="absolute inset-x-0 bottom-0 overflow-hidden"
+              style={{
+                height: "50%",
+                transform: isRevealed ? "scaleY(0)" : "scaleY(1)",
+                transformOrigin: "bottom center",
+                transition: "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            >
+              <span className="absolute inset-0 bg-gradient-to-t from-[#E4E0E8] to-[#D4D0D8]" />
+            </span>
+            <span
+              className="absolute inset-x-0"
+              style={{
+                top: "calc(50% - 0.5px)",
+                height: 1,
+                backgroundColor: isHovered ? "#B27AFF" : "#4B1D73",
+                opacity: isHovered ? 0.8 : 0.25,
+                transition: "opacity 0.2s, background-color 0.2s",
+              }}
             />
-          </span>
-        </span>
-      ) : (
-        <span
-          className="absolute inset-0 pointer-events-none transition-all duration-200"
-          style={{
-            filter: isRevealed
-              ? "none"
-              : isHovered
-              ? "drop-shadow(0 0 14px rgba(178, 122, 255, 0.85))"
-              : "drop-shadow(0 0 6px rgba(75, 29, 115, 0.5))"
-          }}
-        >
-          <span className="absolute inset-0 overflow-hidden block">
+          </>
+        ) : (
+          <>
             <motion.span
-              className="absolute inset-0 bg-redact/95 backdrop-blur-md"
-              initial={{ x: "0%" }}
-              animate={{ x: isRevealed ? "101%" : "0%" }}
+              className="absolute inset-x-0 top-0 overflow-hidden"
+              style={{ height: "50%" }}
+              animate={{ scaleY: isRevealed ? 0 : 1 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              style={{ clipPath: "polygon(0% 1.5%, 26% 0%, 51% 2.5%, 74% 0.5%, 100% 2%, 99% 98%, 76% 99.5%, 48% 97.5%, 24% 99%, 0% 98.5%)" }}
+              initial={false}
+            >
+              <span className="absolute inset-0 bg-gradient-to-b from-[#E4E0E8] to-[#D4D0D8]" />
+            </motion.span>
+            <motion.span
+              className="absolute inset-x-0 bottom-0 overflow-hidden"
+              style={{ height: "50%" }}
+              animate={{ scaleY: isRevealed ? 0 : 1 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              initial={false}
+            >
+              <span className="absolute inset-0 bg-gradient-to-t from-[#E4E0E8] to-[#D4D0D8]" />
+            </motion.span>
+            <motion.span
+              className="absolute inset-x-0"
+              style={{ top: "calc(50% - 0.5px)", height: 1, originX: "50%" }}
+              animate={{
+                scaleX: isHovered || isRevealed ? 1.1 : 1,
+                backgroundColor: isHovered ? "#B27AFF" : "#4B1D73",
+                opacity: isHovered ? 0.8 : 0.25,
+              }}
+              transition={{ duration: 0.2 }}
             />
-          </span>
-        </span>
-      )}
+            {isHovered && !isRevealed && (
+              <motion.span
+                className="absolute inset-0"
+                style={{
+                  boxShadow: "inset 0 0 8px rgba(178, 122, 255, 0.15)",
+                  borderRadius: 1,
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              />
+            )}
+          </>
+        )}
+      </span>
     </span>
   );
 }

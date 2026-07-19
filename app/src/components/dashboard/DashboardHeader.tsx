@@ -15,27 +15,36 @@ function truncateAddress(addr: string): string {
 
 export function DashboardHeader({ walletAddress, onConnect, isConnecting }: DashboardHeaderProps) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []); // eslint-disable-line react-hooks/set-state-in-effect
+  useEffect(() => { setMounted(true); }, []);
+
   return (
-    <header className="border-b border-line/10 bg-room/95 backdrop-blur-md">
+    <header className="border-b border-line/[0.06] bg-studio/95 backdrop-blur-md">
       <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="cursor-pointer focus:outline-2 focus:outline-paper-text focus:outline-offset-2"
+          className="cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
         >
           <BrandWordmark className="text-base tracking-[0.15em]" iconSize="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-6">
+          <a
+            href="https://docs.redact.zip"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs uppercase tracking-widest text-muted hover:text-ink transition-colors duration-150 cursor-pointer"
+          >
+            Docs
+          </a>
           {mounted && walletAddress ? (
-            <span className="font-label text-xs text-paper-text/70 tracking-wider px-3 py-1.5 border border-paper-text/20 rounded-none">
+            <span className="hover-dissolve font-label text-xs text-muted tracking-wider px-3 py-1.5 border border-line/[0.08] cursor-default">
               {truncateAddress(walletAddress)}
             </span>
           ) : (
             <button
               onClick={onConnect}
               disabled={isConnecting}
-              className="bg-redact text-paper text-xs font-label uppercase tracking-widest px-4 py-2 rounded-[4px] hover:bg-reveal disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer focus:outline-2 focus:outline-paper-text focus:outline-offset-2"
+              className="bg-redact text-white text-xs font-label uppercase tracking-widest px-4 py-2 hover:bg-[#3E1660] disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
             >
               {isConnecting ? "Connecting..." : "Connect Wallet"}
             </button>

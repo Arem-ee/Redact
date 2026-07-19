@@ -100,7 +100,7 @@ export function DepositModal({
             value={token}
             onChange={(e) => setToken(e.target.value)}
             disabled={isProcessing}
-            className="w-full bg-room border border-line/30 px-3 py-2 font-mono text-sm text-paper-text placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink"
+            className="w-full border border-line/[0.08] px-3 py-2 font-mono text-sm text-ink placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink bg-studio"
           />
         </div>
 
@@ -116,7 +116,7 @@ export function DepositModal({
             onChange={(e) => setAmount(e.target.value)}
             disabled={isProcessing}
             placeholder="0.0"
-            className="w-full bg-room border border-line/30 px-3 py-2 font-sans text-sm text-paper-text placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink"
+            className="w-full border border-line/[0.08] px-3 py-2 font-sans text-sm text-ink placeholder:text-muted/50 disabled:opacity-50 focus:outline-2 focus:outline-ink bg-studio"
           />
         </div>
 
@@ -130,8 +130,8 @@ export function DepositModal({
           <p className="font-sans text-sm text-muted">Waiting for chain confirmation…</p>
         )}
         {stage === "confirmed" && txHash && (
-          <div className="bg-paper border border-line/30 p-3">
-            <p className="font-sans text-sm text-reveal font-semibold">Deposit confirmed</p>
+          <div className="bg-studio border border-line/[0.06] p-3">
+            <p className="font-sans text-sm text-emerald-700 font-semibold">Deposit confirmed</p>
             <p className="font-mono text-xs text-muted break-all mt-1">tx: {txHash}</p>
           </div>
         )}
@@ -144,7 +144,7 @@ export function DepositModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-redact text-paper text-sm font-label uppercase tracking-wider py-3 rounded-[4px] hover:bg-reveal transition-colors cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
+              className="flex-1 bg-redact text-white text-sm font-label uppercase tracking-wider py-3 hover:bg-[#3E1660] transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
             >
               Close
             </button>
@@ -153,7 +153,7 @@ export function DepositModal({
               <button
                 type="submit"
                 disabled={isProcessing || !amount || isWrongNetwork}
-                className="flex-1 bg-redact text-paper text-sm font-label uppercase tracking-wider py-3 rounded-[4px] hover:bg-reveal disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-colors cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
+                className="flex-1 bg-redact text-white text-sm font-label uppercase tracking-wider py-3 hover:bg-[#3E1660] disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
               >
                 {isProcessing ? "Processing…" : "Deposit"}
               </button>
@@ -162,7 +162,7 @@ export function DepositModal({
                   type="button"
                   onClick={onClose}
                   disabled={isProcessing}
-                  className="border border-redact text-redact text-sm font-label uppercase tracking-wider px-6 py-3 rounded-[4px] hover:bg-redact hover:text-paper disabled:border-line disabled:text-muted disabled:cursor-not-allowed transition-colors cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
+                  className="border border-redact/40 text-redact text-sm font-label uppercase tracking-wider px-6 py-3 hover:bg-redact hover:text-white disabled:border-line disabled:text-muted disabled:cursor-not-allowed transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
                 >
                   Cancel
                 </button>

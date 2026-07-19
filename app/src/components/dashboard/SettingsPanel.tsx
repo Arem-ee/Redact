@@ -65,7 +65,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
             placeholder="4-digit PIN"
             disabled={status === "loading"}
-            className="w-full border border-line bg-paper text-ink p-3 text-sm font-sans rounded-none focus:border-redact focus:outline-none tracking-widest text-center disabled:bg-paper/50 disabled:text-muted disabled:cursor-not-allowed"
+            className="w-full border border-line/[0.08] bg-studio text-ink p-3 text-sm font-sans focus:outline-2 focus:outline-ink tracking-widest text-center disabled:bg-studio/50 disabled:text-muted disabled:cursor-not-allowed"
           />
         </div>
 
@@ -86,7 +86,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
         <button
           type="submit"
           disabled={!/^\d{4}$/.test(pin) || status === "loading"}
-          className="w-full bg-redact text-paper text-sm font-label uppercase tracking-wider py-3 rounded-[4px] hover:bg-reveal disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer flex items-center justify-center gap-2 focus:outline-2 focus:outline-ink focus:outline-offset-2"
+          className="w-full bg-redact text-white text-sm font-label uppercase tracking-wider py-3 hover:bg-[#3E1660] disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center justify-center gap-2 focus:outline-2 focus:outline-ink focus:outline-offset-2"
         >
           {status === "loading" ? (
             <>

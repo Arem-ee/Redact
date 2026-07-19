@@ -1,0 +1,8 @@
+<svg width="120" height="32" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M16 2C8.268 2 2 8.268 2 16s6.268 14 14 14 14-6.268 14-14S23.732 2 16 2zm0 24c-5.523 0-10-4.477-10-10S10.477 6 16 6s10 4.477 10 10-4.477 10-10 10z" fill="#6E54FF"/>
+  <path d="M16 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z" fill="#6E54FF"/>
+  <path d="M16 18c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z" fill="#6E54FF"/>
+  <path d="M8 16c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3-3-1.343-3-3z" fill="#6E54FF"/>
+  <path d="M22 16c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3 3-1.343 3-3z" fill="#6E54FF"/>
+  <text x="42" y="22" font-family="Inter, sans-serif" font-weight="600" font-size="16" fill="#1A1520" letter-spacing="-0.01em">Monad</text>
+</svg>

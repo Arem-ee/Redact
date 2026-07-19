@@ -1,22 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Shield, RefreshCw } from "lucide-react";
 
-const SCREEN_W = 280;
-const SCREEN_H = 608;
-const BEZEL_R = 50;
+const SCREEN_W = 260;
+const SCREEN_H = 564;
+const BEZEL_R = 28;
 const BEZEL_C = "#1C1C1E";
-const DI_W = 108;
-const DI_H = 32;
+const DI_W = 100;
+const DI_H = 28;
 
 function SideButtons() {
   return (
-    <div className="absolute right-0 top-0 bottom-0 pointer-events-none" style={{ right: -4 }}>
-      <div className="absolute w-[3px] h-[52px] bg-[#3A3A3C] rounded-[1px]" style={{ top: 140 }} />
-      <div className="absolute w-[3px] h-[36px] bg-[#3A3A3C] rounded-[1px]" style={{ top: 200 }} />
-      <div className="absolute w-[3px] h-[36px] bg-[#3A3A3C] rounded-[1px]" style={{ top: 244 }} />
+    <div className="absolute right-0 top-0 bottom-0 pointer-events-none" style={{ right: -3 }}>
+      <div className="absolute w-[2.5px] h-[40px] bg-[#3A3A3C] rounded-[1px]" style={{ top: 130 }} />
+      <div className="absolute w-[2.5px] h-[28px] bg-[#3A3A3C] rounded-[1px]" style={{ top: 178 }} />
+      <div className="absolute w-[2.5px] h-[28px] bg-[#3A3A3C] rounded-[1px]" style={{ top: 214 }} />
+    </div>
+  );
+}
+
+function OrbitingParticles() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute w-1.5 h-1.5 rounded-full bg-redact/15" style={{
+        top: "50%", left: "50%",
+        animation: "orbit 12s linear infinite",
+        marginTop: -3, marginLeft: -3,
+      }} />
+      <div className="absolute w-1 h-1 rounded-full bg-purple-bright/10" style={{
+        top: "50%", left: "50%",
+        animation: "orbit-reverse 16s linear infinite",
+        marginTop: -2, marginLeft: -2,
+      }} />
     </div>
   );
 }
@@ -26,6 +43,22 @@ export function InteractiveDuressDemo() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [unlockType, setUnlockType] = useState<"standard" | "duress" | null>(null);
   const [showError, setShowError] = useState(false);
+  const [tiltOffset, setTiltOffset] = useState(0);
+  const startRef = useRef(Date.now());
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    startRef.current = Date.now();
+    const tick = () => {
+      const t = (Date.now() - startRef.current) / 1000;
+      setTiltOffset(Math.sin(t * 0.3) * 1.2);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   const handleKeyPress = (num: string) => {
     if (isUnlocked) return;
@@ -47,43 +80,43 @@ export function InteractiveDuressDemo() {
   const handleReset = () => { setPin(""); setIsUnlocked(false); setUnlockType(null); };
 
   return (
-    <div id="duress-simulator-widget" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-12 w-full">
-      <div className="lg:col-span-5 space-y-6">
-        <p className="text-base text-muted leading-relaxed">
+    <div id="duress-simulator-widget" className="flex flex-col lg:flex-row gap-8 items-center w-full">
+      <div className="flex-1 space-y-6 max-w-md">
+        <p className="text-base sm:text-lg text-muted leading-relaxed">
           Set a duress PIN. If you&apos;re ever forced to open the app, entering it shows a low harmless balance instead of your real one. There&apos;s no visible difference.
         </p>
 
-        <div className="space-y-4 pt-2">
-          <div className="bg-paper border border-line p-4 rounded-none">
-            <h4 className="font-display font-bold text-sm text-ink mb-1">
-              Standard Vault PIN
-            </h4>
-            <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between py-3 border-b border-line/15">
+            <div>
+              <h4 className="font-display font-bold text-sm text-ink mb-0.5">
+                Standard Vault PIN
+              </h4>
               <span className="text-xs text-muted">Unlocks your actual redacted holdings</span>
-              <button
-                id="pin-std-preset"
-                onClick={() => { handleReset(); setPin("5820"); setUnlockType("standard"); setIsUnlocked(true); }}
-                className="bg-redact text-paper text-xs font-label uppercase tracking-wider rounded-[4px] px-3 py-1.5 hover:bg-reveal focus:outline-2 focus:outline-ink focus:outline-offset-2 cursor-pointer"
-              >
-                Enter 5820
-              </button>
             </div>
+            <button
+              id="pin-std-preset"
+              onClick={() => { handleReset(); setPin("5820"); setUnlockType("standard"); setIsUnlocked(true); }}
+              className="bg-redact text-white text-xs font-label uppercase tracking-wider px-4 py-2 hover:bg-[#3E1660] focus:outline-2 focus:outline-ink focus:outline-offset-2 cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-95 flex-shrink-0 ml-4"
+            >
+              Enter 5820
+            </button>
           </div>
 
-          <div className="bg-paper border border-line p-4 rounded-none">
-            <h4 className="font-display font-bold text-sm text-ink mb-1">
-              Duress Decoy PIN
-            </h4>
-            <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between py-3 border-b border-line/15">
+            <div>
+              <h4 className="font-display font-bold text-sm text-ink mb-0.5">
+                Duress Decoy PIN
+              </h4>
               <span className="text-xs text-muted">Displays an authentic low-balance safety decoy</span>
-              <button
-                id="pin-dur-preset"
-                onClick={() => { handleReset(); setPin("1397"); setUnlockType("duress"); setIsUnlocked(true); }}
-                className="bg-redact text-paper text-xs font-label uppercase tracking-wider rounded-[4px] px-3 py-1.5 hover:bg-reveal focus:outline-2 focus:outline-ink focus:outline-offset-2 cursor-pointer"
-              >
-                Enter 1397
-              </button>
             </div>
+            <button
+              id="pin-dur-preset"
+              onClick={() => { handleReset(); setPin("1397"); setUnlockType("duress"); setIsUnlocked(true); }}
+              className="bg-redact text-white text-xs font-label uppercase tracking-wider px-4 py-2 hover:bg-[#3E1660] focus:outline-2 focus:outline-ink focus:outline-offset-2 cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-95 flex-shrink-0 ml-4"
+            >
+              Enter 1397
+            </button>
           </div>
         </div>
 
@@ -91,17 +124,26 @@ export function InteractiveDuressDemo() {
           <button
             id="reset-duress-sim"
             onClick={handleReset}
-            className="flex items-center gap-1.5 text-xs font-label uppercase tracking-[0.04em] text-ink underline decoration-0 hover:decoration-1 underline-offset-4 cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-label uppercase tracking-[0.04em] text-muted hover:text-ink underline decoration-0 hover:decoration-1 underline-offset-4 cursor-pointer transition-colors"
           >
             <RefreshCw size={12} /> Reset
           </button>
         )}
       </div>
 
-      <div className="lg:col-span-7 flex justify-center">
+      <div className="flex-1 flex justify-center relative">
+        <div
+          className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[200px] h-[100px] rounded-full bg-redact/5 blur-[50px] pointer-events-none"
+        />
+
+        <OrbitingParticles />
+
         <div
           className="relative cursor-pointer select-none"
-          style={{ position: "relative" }}
+          style={{
+            transform: `rotate(${tiltOffset}deg)`,
+            transition: "transform 0.1s ease-out",
+          }}
         >
           <div
             className="relative"
@@ -110,21 +152,21 @@ export function InteractiveDuressDemo() {
               height: SCREEN_H,
               borderRadius: BEZEL_R,
               backgroundColor: BEZEL_C,
-              padding: 8,
-              boxShadow: "0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.4)",
+              padding: 5,
+              boxShadow: "0 0 0 0.5px rgba(255,255,255,0.05), 0 20px 60px rgba(0,0,0,0.25), 0 8px 20px rgba(0,0,0,0.15)",
             }}
           >
             <SideButtons />
 
             <div
               className="overflow-hidden relative"
-              style={{ width: "100%", height: "100%", borderRadius: BEZEL_R - 8 }}
+              style={{ width: "100%", height: "100%", borderRadius: BEZEL_R - 5 }}
             >
               <div
                 className="w-full h-full"
                 style={{
-                  background: "var(--color-paper)",
-                  padding: "56px 16px 16px",
+                  background: "#FFFFFF",
+                  padding: "50px 14px 14px",
                   display: "flex",
                   flexDirection: "column",
                 }}
@@ -132,7 +174,7 @@ export function InteractiveDuressDemo() {
                 <div
                   style={{
                     position: "absolute",
-                    top: 10,
+                    top: 8,
                     left: "50%",
                     marginLeft: -DI_W / 2,
                     width: DI_W,
@@ -154,54 +196,54 @@ export function InteractiveDuressDemo() {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.15 }}
                     >
-                      <div className="text-center mt-6">
-                        <div className="inline-flex p-3 bg-redact/10 text-redact rounded-none mb-3">
-                          <Shield size={20} />
+                      <div className="text-center mt-4">
+                        <div className="inline-flex p-2.5 bg-redact/5 text-redact rounded-none mb-2">
+                          <Shield size={18} />
                         </div>
-                        <h3 className="font-display font-semibold text-base text-ink">Enter Security PIN</h3>
-                        <p className="text-xs text-muted mt-1">Unlock your private vault</p>
+                        <h3 className="font-display font-semibold text-sm text-ink">Enter Security PIN</h3>
+                        <p className="text-[11px] text-muted mt-0.5">Unlock your private vault</p>
                       </div>
 
-                      <div className="flex justify-center gap-3 my-6">
+                      <div className="flex justify-center gap-2.5 my-5">
                         {[0, 1, 2, 3].map((idx) => (
                           <div
                             key={idx}
-                            className={`w-3.5 h-3.5 border rounded-none transition-colors duration-150 ${
+                            className={`w-3 h-3 border transition-colors duration-150 ${
                               showError
-                                ? "bg-red-700 border-red-700"
+                                ? "bg-red-500 border-red-500"
                                 : pin.length > idx
                                 ? "bg-redact border-redact"
-                                : "border-muted bg-transparent"
+                                : "border-line bg-transparent"
                             }`}
                           />
                         ))}
                       </div>
 
-                      <div className="grid grid-cols-3 gap-2 mt-auto">
+                      <div className="grid grid-cols-3 gap-1.5 mt-auto">
                         {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((num) => (
                           <button
                             key={num}
                             onClick={() => handleKeyPress(num)}
-                            className="h-10 border border-line bg-paper text-ink font-label font-medium hover:bg-ink hover:text-paper rounded-[4px] transition-colors duration-100 flex items-center justify-center cursor-pointer"
+                            className="h-9 border border-line/60 bg-white text-ink font-label font-medium text-sm hover:bg-[#F0ECF4] transition-all duration-150 hover:scale-[1.03] active:scale-95 flex items-center justify-center cursor-pointer"
                           >
                             {num}
                           </button>
                         ))}
                         <button
                           onClick={handleBackspace}
-                          className="h-10 border border-line bg-paper text-ink text-xs hover:bg-ink hover:text-paper rounded-[4px] transition-colors duration-100 flex items-center justify-center cursor-pointer col-span-1 font-label font-medium"
+                          className="h-9 border border-line/60 bg-white text-ink text-[10px] hover:bg-[#F0ECF4] transition-all duration-150 hover:scale-[1.03] active:scale-95 flex items-center justify-center cursor-pointer col-span-1 font-label font-medium"
                         >
                           DEL
                         </button>
                         <button
                           onClick={() => handleKeyPress("0")}
-                          className="h-10 border border-line bg-paper text-ink font-label font-medium hover:bg-ink hover:text-paper rounded-[4px] transition-colors duration-100 flex items-center justify-center cursor-pointer"
+                          className="h-9 border border-line/60 bg-white text-ink font-label font-medium text-sm hover:bg-[#F0ECF4] transition-all duration-150 hover:scale-[1.03] active:scale-95 flex items-center justify-center cursor-pointer"
                         >
                           0
                         </button>
                         <button
                           onClick={handleReset}
-                          className="h-10 border border-line bg-paper text-ink text-xs hover:bg-ink hover:text-paper rounded-[4px] transition-colors duration-100 flex items-center justify-center cursor-pointer col-span-1 font-label font-medium"
+                          className="h-9 border border-line/60 bg-white text-ink text-[10px] hover:bg-[#F0ECF4] transition-all duration-150 hover:scale-[1.03] active:scale-95 flex items-center justify-center cursor-pointer col-span-1 font-label font-medium"
                         >
                           CLR
                         </button>
@@ -217,12 +259,12 @@ export function InteractiveDuressDemo() {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="font-label text-[10px] font-medium text-muted uppercase tracking-wider">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="font-label text-[9px] font-medium text-muted uppercase tracking-wider">
                           Redact
                         </span>
                         <span
-                          className={`font-label text-[9px] font-medium uppercase px-1.5 py-0.5 rounded-none ${
+                          className={`font-label text-[8px] font-medium uppercase px-1 py-0.5 ${
                             unlockType === "standard"
                               ? "bg-emerald-100 text-emerald-800"
                               : "bg-amber-100 text-amber-800"
@@ -232,41 +274,38 @@ export function InteractiveDuressDemo() {
                         </span>
                       </div>
 
-                      <div className="mb-4">
-                        <p className="font-label text-[9px] uppercase tracking-wider text-muted font-medium mb-0.5">
+                      <div className="mb-3">
+                        <p className="font-label text-[8px] uppercase tracking-wider text-muted font-medium mb-0.5">
                           Your Balance
                         </p>
-                        <h2 className="font-display font-bold text-2xl text-ink">
+                        <h2 className="font-display font-bold text-xl text-ink">
                           {unlockType === "standard" ? "$1,206,250.00" : "$142.50"}
                         </h2>
                       </div>
 
-                      <div
-                        className="flex-1 rounded-none border border-line/50 p-3"
-                        style={{ background: "var(--color-paper)" }}
-                      >
-                        <p className="font-label text-[8px] uppercase tracking-wider text-muted font-medium mb-3 border-b border-line pb-1.5">
+                      <div className="flex-1 border border-line/40 p-2.5 bg-white">
+                        <p className="font-label text-[7px] uppercase tracking-wider text-muted font-medium mb-2 border-b border-line/40 pb-1">
                           Recent Activity
                         </p>
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           {unlockType === "standard" ? (
                             <>
-                              <div className="flex justify-between items-center text-xs">
+                              <div className="flex justify-between items-center text-[10px]">
                                 <span className="text-ink">Deposited from Monad</span>
                                 <span className="font-medium text-emerald-700 font-label">+$250,000.00</span>
                               </div>
-                              <div className="flex justify-between items-center text-xs">
+                              <div className="flex justify-between items-center text-[10px]">
                                 <span className="text-ink">Deposited from Monad</span>
                                 <span className="font-medium text-emerald-700 font-label">+$956,250.00</span>
                               </div>
                             </>
                           ) : (
                             <>
-                              <div className="flex justify-between items-center text-xs">
+                              <div className="flex justify-between items-center text-[10px]">
                                 <span className="text-ink">Coffee Shop</span>
                                 <span className="font-medium text-red-700 font-label">-$12.50</span>
                               </div>
-                              <div className="flex justify-between items-center text-xs">
+                              <div className="flex justify-between items-center text-[10px]">
                                 <span className="text-ink">Supermarket</span>
                                 <span className="font-medium text-red-700 font-label">-$35.00</span>
                               </div>
@@ -275,11 +314,11 @@ export function InteractiveDuressDemo() {
                         </div>
                       </div>
 
-                      <div className="mt-auto flex items-center justify-between border-t border-line/50 pt-3">
-                        <span className="font-label text-[8px] uppercase tracking-wider text-muted font-medium">
+                      <div className="mt-auto flex items-center justify-between border-t border-line/40 pt-2.5">
+                        <span className="font-label text-[7px] uppercase tracking-wider text-muted font-medium">
                           Private Vault
                         </span>
-                        <span className="font-label text-[8px] font-medium uppercase tracking-wider" style={{ color: unlockType === "standard" ? "var(--color-reveal)" : "var(--color-redact)" }}>
+                        <span className="font-label text-[7px] font-medium uppercase tracking-wider text-redact">
                           {unlockType === "standard" ? "UNLOCKED" : "DECOY"}
                         </span>
                       </div>

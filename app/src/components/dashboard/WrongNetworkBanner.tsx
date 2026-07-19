@@ -16,7 +16,7 @@ export function WrongNetworkBanner({ isWrongNetwork, onSwitch, isSwitching, swit
   const rejected = switchError instanceof UserRejectedRequestError;
 
   return (
-    <div className="bg-redact/10 border border-redact/30 p-4 flex items-start gap-3">
+    <div className="bg-redact/5 border border-redact/20 p-4 flex items-start gap-3">
       <AlertTriangle size={18} className="text-redact shrink-0 mt-0.5" />
       <div className="flex-1 min-w-0">
         <p className="font-label text-xs uppercase tracking-wider text-redact font-semibold">
@@ -31,7 +31,7 @@ export function WrongNetworkBanner({ isWrongNetwork, onSwitch, isSwitching, swit
       <button
         onClick={onSwitch}
         disabled={isSwitching}
-        className="shrink-0 bg-redact text-paper text-xs font-label uppercase tracking-wider px-4 py-2 rounded-[4px] hover:bg-reveal disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-colors duration-150 cursor-pointer flex items-center gap-2 focus:outline-2 focus:outline-ink focus:outline-offset-2"
+        className="shrink-0 bg-redact text-white text-xs font-label uppercase tracking-wider px-4 py-2 hover:bg-[#3E1660] disabled:bg-line disabled:text-muted disabled:cursor-not-allowed transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer flex items-center gap-2 focus:outline-2 focus:outline-ink focus:outline-offset-2"
       >
         {isSwitching ? (
           <>

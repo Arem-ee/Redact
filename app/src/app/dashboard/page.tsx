@@ -69,7 +69,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-room">
+    <div className="min-h-screen bg-studio">
       <DashboardHeader
         walletAddress={address ?? null}
         onConnect={handleConnect}
@@ -85,7 +85,7 @@ export default function DashboardPage() {
         />
 
         {connectRejected && !isConnected && (
-          <div className="border border-redact/30 p-4 flex items-start gap-3">
+          <div className="border border-redact/20 p-4 flex items-start gap-3">
             <p className="font-sans text-sm text-muted flex-1">
               Connection cancelled. Click <strong>Connect Wallet</strong> above to try again.
             </p>
@@ -93,7 +93,7 @@ export default function DashboardPage() {
         )}
 
         {connectError && !connectRejected && !isConnected && (
-          <div className="border border-redact/30 p-4 flex items-start gap-3">
+          <div className="border border-redact/20 p-4 flex items-start gap-3">
             <p className="font-sans text-sm text-redact flex-1">
               {connectError.message || "Connection failed. Please try again."}
             </p>
@@ -101,20 +101,20 @@ export default function DashboardPage() {
         )}
 
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl sm:text-3xl font-bold text-paper-text">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink">
             Vault
           </h1>
           {isConnected && (
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setActiveModal("settings")}
-                className="font-label text-xs uppercase tracking-wider text-muted hover:text-paper-text transition-colors cursor-pointer focus:outline-2 focus:outline-paper-text focus:outline-offset-2"
+                className="font-label text-xs uppercase tracking-wider text-muted hover:text-ink transition-colors cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
               >
                 Settings
               </button>
               <button
                 onClick={() => disconnect()}
-                className="font-label text-xs uppercase tracking-wider text-redact/70 hover:text-redact transition-colors cursor-pointer focus:outline-2 focus:outline-paper-text focus:outline-offset-2"
+                className="font-label text-xs uppercase tracking-wider text-redact/70 hover:text-redact transition-colors cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
               >
                 Disconnect
               </button>
@@ -151,7 +151,14 @@ export default function DashboardPage() {
         walletClient={walletClient ?? undefined}
         isWrongNetwork={isWrongNetwork}
       />
-      <WithdrawModal open={activeModal === "withdraw"} onClose={() => setActiveModal(null)} />
+      <WithdrawModal
+        open={activeModal === "withdraw"}
+        onClose={() => setActiveModal(null)}
+        onWithdrawComplete={fetchBalance}
+        signMessageAsync={(msg: string) => signMessageAsync({ message: msg })}
+        walletClient={walletClient ?? undefined}
+        isWrongNetwork={isWrongNetwork}
+      />
       <SettingsPanel open={activeModal === "settings"} onClose={() => setActiveModal(null)} />
     </div>
   );
