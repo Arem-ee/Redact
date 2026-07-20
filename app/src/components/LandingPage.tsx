@@ -398,12 +398,12 @@ export default function LandingPage() {
           >
             <div className="flex items-center gap-3 text-[#B0A8B8]/40">
               <span className="text-[10px] font-label uppercase tracking-wider">Built on</span>
-              <Image src="/monad-logo.svg" alt="Monad" width={0} height={0} className="h-5 w-auto opacity-50" unoptimized />
+              <Image src="/monad-logo.svg" alt="Monad" width={120} height={32} className="h-5 w-auto opacity-50" unoptimized />
             </div>
             <div className="w-px h-6 bg-white/[0.08]" />
             <div className="flex items-center gap-3 text-[#B0A8B8]/40">
               <span className="text-[10px] font-label uppercase tracking-wider">Powered by</span>
-              <Image src="/unlink-logo.svg" alt="Unlink" width={0} height={0} className="h-5 w-auto opacity-50" unoptimized />
+              <Image src="/unlink-logo.svg" alt="Unlink" width={100} height={32} className="h-5 w-auto opacity-50" unoptimized />
             </div>
           </motion.div>
         </div>
