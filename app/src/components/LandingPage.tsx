@@ -621,7 +621,7 @@ export default function LandingPage() {
                   </li>
                   <li>
                     <a
-                      href="https://github.com/redact-privacy"
+                      href="https://github.com/Arem-ee/Redact"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-muted hover:text-ink inline-flex items-center gap-1 transition-colors cursor-pointer focus:outline-none"
@@ -631,7 +631,7 @@ export default function LandingPage() {
                   </li>
                   <li>
                     <a
-                      href="https://x.com/redact_privacy"
+                      href="https://x.com/Arem_ee"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-muted hover:text-ink inline-flex items-center gap-1 transition-colors cursor-pointer focus:outline-none"
