@@ -48,6 +48,27 @@ export async function saveDuressPin(pin: string): Promise<void> {
   });
 }
 
+export async function verifyCurrentPin(pin: string): Promise<boolean> {
+  const stored = getStored();
+  if (!stored) return false;
+  const hash = await hashPin(pin);
+  return hash === stored.standardHash;
+}
+
+export async function changeStandardPin(currentPin: string, newPin: string): Promise<boolean> {
+  const stored = getStored();
+  if (!stored) return false;
+  const currentHash = await hashPin(currentPin);
+  if (currentHash !== stored.standardHash) return false;
+  const newHash = await hashPin(newPin);
+  setStored({
+    standardHash: newHash,
+    duressHash: stored.duressHash,
+    decoyBalance: stored.decoyBalance,
+  });
+  return true;
+}
+
 export async function identifyPin(pin: string): Promise<"standard" | "duress" | null> {
   const stored = getStored();
   if (!stored) return null;
@@ -77,4 +98,62 @@ export function getDecoyBalance(): string {
 export function hasPins(): boolean {
   const stored = getStored();
   return !!stored && stored.standardHash.length > 0;
+}
+
+export function hasDuressPin(): boolean {
+  const stored = getStored();
+  return !!stored && !!stored.duressHash;
+}
+
+const RATE_LIMIT_KEY = "redact_pin_attempts";
+
+interface RateLimitState {
+  count: number;
+  firstAttempt: number;
+  lockedUntil: number | null;
+}
+
+function getRateLimitState(): RateLimitState {
+  try {
+    const raw = localStorage.getItem(RATE_LIMIT_KEY);
+    return raw ? JSON.parse(raw) : { count: 0, firstAttempt: 0, lockedUntil: null };
+  } catch {
+    return { count: 0, firstAttempt: 0, lockedUntil: null };
+  }
+}
+
+function setRateLimitState(state: RateLimitState): void {
+  localStorage.setItem(RATE_LIMIT_KEY, JSON.stringify(state));
+}
+
+export function recordFailedAttempt(): void {
+  const state = getRateLimitState();
+  const now = Date.now();
+
+  if (state.lockedUntil && now < state.lockedUntil) return;
+
+  if (state.count === 0) state.firstAttempt = now;
+  state.count += 1;
+
+  if (state.count >= 5) {
+    state.lockedUntil = now + 10000;
+    state.count = 0;
+  } else if (state.count >= 3) {
+    state.lockedUntil = now + 3000;
+  }
+
+  setRateLimitState(state);
+}
+
+export function resetRateLimit(): void {
+  localStorage.removeItem(RATE_LIMIT_KEY);
+}
+
+export function getRateLimitDelay(): number {
+  const state = getRateLimitState();
+  const now = Date.now();
+  if (state.lockedUntil && now < state.lockedUntil) {
+    return state.lockedUntil - now;
+  }
+  return 0;
 }

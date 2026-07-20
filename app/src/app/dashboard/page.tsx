@@ -13,7 +13,7 @@ import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 import { WrongNetworkBanner } from "@/components/dashboard/WrongNetworkBanner";
 import { useNetworkGuard } from "@/lib/useNetworkGuard";
 import { getUnlinkClient, fetchPrivateBalance } from "@/lib/unlink";
-import { identifyPin, hasPins, isDuressModeActive, setDuressModeActive, getDecoyBalance } from "@/lib/duress";
+import { identifyPin, hasPins, isDuressModeActive, setDuressModeActive, getDecoyBalance, recordFailedAttempt, resetRateLimit, getRateLimitDelay } from "@/lib/duress";
 import type { ModalType, ActivityItem } from "@/components/dashboard/types";
 
 export default function DashboardPage() {
@@ -31,6 +31,7 @@ export default function DashboardPage() {
 
   const [unlockPin, setUnlockPin] = useState("");
   const [unlockError, setUnlockError] = useState("");
+  const [unlockDelay, setUnlockDelay] = useState(0);
   const [vaultUnlocked, setVaultUnlocked] = useState(false);
 
   const [activities, setActivities] = useState<ActivityItem[] | null>(null);
@@ -86,19 +87,36 @@ export default function DashboardPage() {
   }, [isConnected, walletClient, fetchBalance]);
 
   const handleUnlock = async () => {
+    const delay = getRateLimitDelay();
+    if (delay > 0) {
+      setUnlockDelay(delay);
+      setUnlockError(`Too many attempts. Try again in ${Math.ceil(delay / 1000)}s.`);
+      setTimeout(() => setUnlockDelay(0), delay);
+      return;
+    }
     const result = await identifyPin(unlockPin);
     if (result === "standard") {
+      resetRateLimit();
       setDuressModeActive(false);
       setVaultUnlocked(true);
       setUnlockPin("");
       setUnlockError("");
     } else if (result === "duress") {
+      resetRateLimit();
       setDuressModeActive(true);
       setVaultUnlocked(true);
       setUnlockPin("");
       setUnlockError("");
     } else {
-      setUnlockError("Invalid PIN");
+      recordFailedAttempt();
+      const newDelay = getRateLimitDelay();
+      if (newDelay > 0) {
+        setUnlockDelay(newDelay);
+        setUnlockError(`Too many attempts. Try again in ${Math.ceil(newDelay / 1000)}s.`);
+        setTimeout(() => setUnlockDelay(0), newDelay);
+      } else {
+        setUnlockError("Invalid PIN");
+      }
     }
   };
 
@@ -168,13 +186,14 @@ export default function DashboardPage() {
                 pattern="[0-9]{4}"
                 maxLength={4}
                 value={unlockPin}
+                disabled={unlockDelay > 0}
                 onChange={(e) => {
                   setUnlockPin(e.target.value.replace(/\D/g, "").slice(0, 4));
                   setUnlockError("");
                 }}
                 onKeyDown={(e) => { if (e.key === "Enter") handleUnlock(); }}
                 placeholder="4-digit PIN"
-                className="w-full border border-line/[0.08] bg-studio text-ink p-3 text-sm font-sans focus:outline-2 focus:outline-ink tracking-widest text-center"
+                className="w-full border border-line/[0.08] bg-studio text-ink p-3 text-sm font-sans focus:outline-2 focus:outline-ink tracking-widest text-center disabled:bg-studio/50 disabled:text-muted disabled:cursor-not-allowed"
                 autoFocus
               />
               {unlockError && (
@@ -197,12 +216,14 @@ export default function DashboardPage() {
               </h1>
               {isConnected && (
                 <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setActiveModal("settings")}
-                    className="font-label text-xs uppercase tracking-wider text-muted hover:text-ink transition-colors cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
-                  >
-                    Settings
-                  </button>
+                  {!isDuressModeActive() && (
+                    <button
+                      onClick={() => setActiveModal("settings")}
+                      className="font-label text-xs uppercase tracking-wider text-muted hover:text-ink transition-colors cursor-pointer focus:outline-2 focus:outline-ink focus:outline-offset-2"
+                    >
+                      Settings
+                    </button>
+                  )}
                   {hasPins() && vaultUnlocked && (
                     <button
                       onClick={handleLock}
