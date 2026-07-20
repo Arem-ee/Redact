@@ -262,7 +262,8 @@ export default function LandingPage() {
         className="pt-28 pb-16 md:pt-36 md:pb-20 bg-studio relative"
       >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-[#B27AFF]/[0.03] blur-[120px]" />
+          <div className="absolute top-[-12%] left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-[#B27AFF]/[0.06] blur-[140px]" />
+          <div className="absolute top-[2%] left-1/2 -translate-x-1/2 w-[400px] h-[200px] rounded-full bg-[#B27AFF]/[0.04] blur-[80px]" />
         </div>
 
         <div className="max-w-[900px] mx-auto px-8 text-center">
@@ -398,12 +399,12 @@ export default function LandingPage() {
           >
             <div className="flex items-center gap-3 text-[#B0A8B8]/40">
               <span className="text-[10px] font-label uppercase tracking-wider">Built on</span>
-              <Image src="/monad-logo.svg" alt="Monad" width={120} height={32} className="h-5 w-auto opacity-50" unoptimized />
+              <Image src="/monad-logo-light.svg" alt="Monad" width={120} height={32} className="h-6 w-auto" unoptimized />
             </div>
             <div className="w-px h-6 bg-white/[0.08]" />
             <div className="flex items-center gap-3 text-[#B0A8B8]/40">
               <span className="text-[10px] font-label uppercase tracking-wider">Powered by</span>
-              <Image src="/unlink-logo.svg" alt="Unlink" width={100} height={32} className="h-5 w-auto opacity-50" unoptimized />
+              <Image src="/unlink-logo-light.svg" alt="Unlink" width={100} height={32} className="h-6 w-auto" unoptimized />
             </div>
           </motion.div>
         </div>
@@ -483,23 +484,56 @@ export default function LandingPage() {
       </section>
 
       <section
+        id="stats-section"
+        className="py-20 md:py-28 bg-studio"
+      >
+        <div className="max-w-[1200px] mx-auto px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {[
+              { value: "10,000+", label: "TPS throughput" },
+              { value: "&lt;$0.01", label: "Average fee" },
+              { value: "~1s", label: "Finality" },
+              { value: "100%", label: "EVM compatible" },
+            ].map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={prefersReducedMotion ? {} : { y: 20, opacity: 0 }}
+                animate={faqInView ? { y: 0, opacity: 1 } : {}}
+                transition={{ duration: 0.4, delay: 0.1 * i }}
+              >
+                <div className="bg-[#F2EFF6] p-6 md:p-8 text-center">
+                  <p
+                    className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-ink tracking-tight mb-1"
+                    dangerouslySetInnerHTML={{ __html: stat.value }}
+                  />
+                  <p className="font-sans text-xs sm:text-sm text-muted uppercase tracking-wider">
+                    {stat.label}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section
         id="cta-section"
-        className="py-24 md:py-32 bg-studio relative"
+        className="py-32 md:py-44 bg-studio relative"
       >
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#B27AFF]/[0.02] blur-[150px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#B27AFF]/[0.03] blur-[180px]" />
         </div>
 
-        <div className="max-w-[700px] mx-auto px-8 text-center relative">
-          <p className="font-display text-4xl sm:text-5xl md:text-6xl text-ink leading-[1.08] tracking-tight mb-6">
+        <div className="max-w-[800px] mx-auto px-8 text-center relative">
+          <p className="font-display text-5xl sm:text-6xl md:text-7xl text-ink leading-[1.06] tracking-tight mb-8">
             Privacy is not hiding. It is choosing.
           </p>
-          <p className="font-sans text-base sm:text-lg text-muted mb-10 max-w-md mx-auto leading-relaxed">
+          <p className="font-sans text-lg sm:text-xl text-muted mb-12 max-w-lg mx-auto leading-relaxed">
             Open the app, connect your wallet, and see it for yourself. No setup, no signup, nothing to install.
           </p>
           <button
             onClick={() => router.push("/dashboard")}
-            className="bg-redact text-white text-sm font-label uppercase tracking-wider py-4 px-10 hover:bg-[#3E1660] focus:outline-2 focus:outline-ink focus:outline-offset-2 transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer"
+            className="bg-redact text-white text-base font-label uppercase tracking-wider py-5 px-12 hover:bg-[#3E1660] focus:outline-2 focus:outline-ink focus:outline-offset-2 transition-all duration-200 hover:scale-[1.02] active:scale-95 cursor-pointer"
           >
             Open Redact
           </button>
