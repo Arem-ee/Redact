@@ -1,6 +1,1 @@
-<svg width="100" height="32" viewBox="0 0 100 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="18" cy="12" r="8" stroke="#FFFFFF" stroke-width="2.5"/>
-  <rect x="10" y="18" width="16" height="10" rx="2" fill="#FFFFFF"/>
-  <line x1="18" y1="22" x2="18" y2="26" stroke="#15101A" stroke-width="2" stroke-linecap="round"/>
-  <text x="38" y="22" font-family="Inter, sans-serif" font-weight="500" font-size="15" fill="#FFFFFF" letter-spacing="-0.02em">Unlink</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120.11"><defs><style>.a{fill:#fff;}</style></defs><polygon class="a" points="89.48 71.28 109.33 48.23 109.33 120.11 89.48 120.11 89.48 71.28"/><path class="a" d="M178.94,65.22v54.89H159.09V40.41h-43l17.13-19.9c.33,0,.68,0,1,0A44.73,44.73,0,0,1,178.94,65.22Z"/><path class="a" d="M19.87,100.18H67.39L50.56,119.73A44.76,44.76,0,0,1,0,75.38V0H19.87Z"/><polygon class="a" points="89.48 0 89.48 74.52 69.61 97.62 69.61 0 89.48 0"/><path class="a" d="M202.6,120.11V0h19.85V120.11Z"/><path class="a" d="M244,14.58a13.1,13.1,0,1,1,26.19,0,13.1,13.1,0,0,1-26.19,0ZM247.38,41h19.85v79.15H247.38Z"/><path class="a" d="M409.38,120.11V0h19.86V65.4l45.83-48.59H500L460.5,58l39.29,62.1H477L446.77,72.37,429.24,90.75v29.36Z"/><path class="a" d="M294,65.21v54.9h19.85V40.41h49.76v79.7h19.86V65.21a44.74,44.74,0,0,0-44.74-44.73h0A44.73,44.73,0,0,0,294,65.21Z"/></svg>
